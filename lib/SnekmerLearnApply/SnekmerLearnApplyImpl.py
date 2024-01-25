@@ -4,7 +4,7 @@
 import logging
 import os
 from pprint import pformat
-
+import subprocess 
 from Bio import SeqIO
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
@@ -52,108 +52,149 @@ This sample module contains one small method that filters contigs.
 
 
     def run_SnekmerLearnApply(self, ctx, params):
-        """
-        This example function accepts any number of parameters and returns results in a KBaseReport
-        :param params: instance of mapping from String to unspecified object
-        :returns: instance of type "ReportResults" -> structure: parameter
-           "report_name" of String, parameter "report_ref" of String
-        """
-        # ctx is the context object
-        # return variables are: output
-        #BEGIN run_SnekmerLearnApply
+            """
+            :param params: instance of mapping from String to unspecified object
+            :returns: instance of type "ReportResults"
+            """
+            # ... [initial code setup and logging] ...
 
-        # Print statements to stdout/stderr are captured and available as the App log
-        logging.info('Starting run_SnekmerLearnApply function. Params=' + pformat(params))
+            # Step 1 - Validate and set up parameters
+            # Example: assuming params includes paths to input, counts, confidence, and annotations directories
+            input_dir = params['input_dir']
+            counts_dir = params['counts_dir']
+            confidence_dir = params['confidence_dir']
+            annotations_dir = params['annotations_dir']
 
-        # Step 1 - Parse/examine the parameters and catch any errors
-        # It is important to check that parameters exist and are defined, and that nice error
-        # messages are returned to users.  Parameter values go through basic validation when
-        # defined in a Narrative App, but advanced users or other SDK developers can call
-        # this function directly, so validation is still important.
-        logging.info('Validating parameters.')
-        if 'workspace_name' not in params:
-            raise ValueError('Parameter workspace_name is not set in input arguments')
-        workspace_name = params['workspace_name']
-        if 'assembly_input_ref' not in params:
-            raise ValueError('Parameter assembly_input_ref is not set in input arguments')
-        assembly_input_ref = params['assembly_input_ref']
-        if 'min_length' not in params:
-            raise ValueError('Parameter min_length is not set in input arguments')
-        min_length_orig = params['min_length']
-        min_length = None
-        try:
-            min_length = int(min_length_orig)
-        except ValueError:
-            raise ValueError('Cannot parse integer from min_length parameter (' + str(min_length_orig) + ')')
-        if min_length < 0:
-            raise ValueError('min_length parameter cannot be negative (' + str(min_length) + ')')
+            # Define the output directory
+            output_dir = os.path.join(self.shared_folder, 'snekmer_output')
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Step 2 - Set up the snekmer apply command
+            cmd = f"snekmer apply --input_dir={input_dir} --counts_dir={counts_dir} " \
+                f"--confidence_dir={confidence_dir} --annotations_dir={annotations_dir} " \
+                f"--output_dir={output_dir} --cores=1"
+            
+            # Step 3 - Run the command
+            try:
+                subprocess.run(cmd, check=True, shell=True)
+            except subprocess.CalledProcessError as e:
+                raise ValueError(f"Error running snekmer apply: {e}")
+
+            # Step 4 - Handle outputs and create a report
+            # This is where you handle the output files from the snekmer apply command
+            # For example, creating a report or returning the path to the output files
+
+            # ... [rest of the code to handle outputs and build report] ...
 
 
-        # Step 2 - Download the input data as a Fasta and
-        # We can use the AssemblyUtils module to download a FASTA file from our Assembly data object.
-        # The return object gives us the path to the file that was created.
-        logging.info('Downloading Assembly data as a Fasta file.')
-        assemblyUtil = AssemblyUtil(self.callback_url)
-        fasta_file = assemblyUtil.get_assembly_as_fasta({'ref': assembly_input_ref})
+            output = [1,2,3,4]
+
+            return [output]
 
 
-        # Step 3 - Actually perform the filter operation, saving the good contigs to a new fasta file.
-        # We can use BioPython to parse the Fasta file and build and save the output to a file.
-        good_contigs = []
-        n_total = 0
-        n_remaining = 0
-        for record in SeqIO.parse(fasta_file['path'], 'fasta'):
-            n_total += 1
-            if len(record.seq) >= min_length:
-                good_contigs.append(record)
-                n_remaining += 1
+    # def run_SnekmerLearnApply(self, ctx, params):
+    #     """
+    #     This example function accepts any number of parameters and returns results in a KBaseReport
+    #     :param params: instance of mapping from String to unspecified object
+    #     :returns: instance of type "ReportResults" -> structure: parameter
+    #        "report_name" of String, parameter "report_ref" of String
+    #     """
+    #     # ctx is the context object
+    #     # return variables are: output
+    #     #BEGIN run_SnekmerLearnApply
 
-        logging.info('Filtered Assembly to ' + str(n_remaining) + ' contigs out of ' + str(n_total))
-        filtered_fasta_file = os.path.join(self.shared_folder, 'filtered.fasta')
-        SeqIO.write(good_contigs, filtered_fasta_file, 'fasta')
+    #     # Print statements to stdout/stderr are captured and available as the App log
+    #     logging.info('Starting run_SnekmerLearnApply function. Params=' + pformat(params))
+
+    #     # Step 1 - Parse/examine the parameters and catch any errors
+    #     # It is important to check that parameters exist and are defined, and that nice error
+    #     # messages are returned to users.  Parameter values go through basic validation when
+    #     # defined in a Narrative App, but advanced users or other SDK developers can call
+    #     # this function directly, so validation is still important.
+    #     logging.info('Validating parameters.')
+    #     if 'workspace_name' not in params:
+    #         raise ValueError('Parameter workspace_name is not set in input arguments')
+    #     workspace_name = params['workspace_name']
+    #     if 'assembly_input_ref' not in params:
+    #         raise ValueError('Parameter assembly_input_ref is not set in input arguments')
+    #     assembly_input_ref = params['assembly_input_ref']
+    #     if 'min_length' not in params:
+    #         raise ValueError('Parameter min_length is not set in input arguments')
+    #     min_length_orig = params['min_length']
+    #     min_length = None
+    #     try:
+    #         min_length = int(min_length_orig)
+    #     except ValueError:
+    #         raise ValueError('Cannot parse integer from min_length parameter (' + str(min_length_orig) + ')')
+    #     if min_length < 0:
+    #         raise ValueError('min_length parameter cannot be negative (' + str(min_length) + ')')
 
 
-        # Step 4 - Save the new Assembly back to the system
-        logging.info('Uploading filtered Assembly data.')
-        new_assembly = assemblyUtil.save_assembly_from_fasta({'file': {'path': filtered_fasta_file},
-                                                              'workspace_name': workspace_name,
-                                                              'assembly_name': fasta_file['assembly_name']
-                                                              })
+    #     # Step 2 - Download the input data as a Fasta and
+    #     # We can use the AssemblyUtils module to download a FASTA file from our Assembly data object.
+    #     # The return object gives us the path to the file that was created.
+    #     logging.info('Downloading Assembly data as a Fasta file.')
+    #     assemblyUtil = AssemblyUtil(self.callback_url)
+    #     fasta_file = assemblyUtil.get_assembly_as_fasta({'ref': assembly_input_ref})
 
 
-        # Step 5 - Build a Report and return
-        reportObj = {
-            'objects_created': [{'ref': new_assembly, 'description': 'Filtered contigs'}],
-            'text_message': 'Filtered Assembly to ' + str(n_remaining) + ' contigs out of ' + str(n_total)
-        }
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
+    #     # Step 3 - Actually perform the filter operation, saving the good contigs to a new fasta file.
+    #     # We can use BioPython to parse the Fasta file and build and save the output to a file.
+    #     good_contigs = []
+    #     n_total = 0
+    #     n_remaining = 0
+    #     for record in SeqIO.parse(fasta_file['path'], 'fasta'):
+    #         n_total += 1
+    #         if len(record.seq) >= min_length:
+    #             good_contigs.append(record)
+    #             n_remaining += 1
+
+    #     logging.info('Filtered Assembly to ' + str(n_remaining) + ' contigs out of ' + str(n_total))
+    #     filtered_fasta_file = os.path.join(self.shared_folder, 'filtered.fasta')
+    #     SeqIO.write(good_contigs, filtered_fasta_file, 'fasta')
 
 
-        # STEP 6: contruct the output to send back
-        output = {'report_name': report_info['name'],
-                  'report_ref': report_info['ref'],
-                  'assembly_output': new_assembly,
-                  'n_initial_contigs': n_total,
-                  'n_contigs_removed': n_total - n_remaining,
-                  'n_contigs_remaining': n_remaining
-                  }
-        logging.info('returning:' + pformat(output))
+    #     # Step 4 - Save the new Assembly back to the system
+    #     logging.info('Uploading filtered Assembly data.')
+    #     new_assembly = assemblyUtil.save_assembly_from_fasta({'file': {'path': filtered_fasta_file},
+    #                                                           'workspace_name': workspace_name,
+    #                                                           'assembly_name': fasta_file['assembly_name']
+    #                                                           })
+
+
+    #     # Step 5 - Build a Report and return
+    #     reportObj = {
+    #         'objects_created': [{'ref': new_assembly, 'description': 'Filtered contigs'}],
+    #         'text_message': 'Filtered Assembly to ' + str(n_remaining) + ' contigs out of ' + str(n_total)
+    #     }
+    #     report = KBaseReport(self.callback_url)
+    #     report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
+
+
+    #     # STEP 6: contruct the output to send back
+    #     output = {'report_name': report_info['name'],
+    #               'report_ref': report_info['ref'],
+    #               'assembly_output': new_assembly,
+    #               'n_initial_contigs': n_total,
+    #               'n_contigs_removed': n_total - n_remaining,
+    #               'n_contigs_remaining': n_remaining
+    #               }
+    #     logging.info('returning:' + pformat(output))
                 
-        #END run_SnekmerLearnApply
+    #     #END run_SnekmerLearnApply
 
-        # At some point might do deeper type checking...
-        if not isinstance(output, dict):
-            raise ValueError('Method run_SnekmerLearnApply return value ' +
-                             'output is not type dict as required.')
-        # return the results
-        return [output]
-    def status(self, ctx):
-        #BEGIN_STATUS
-        returnVal = {'state': "OK",
-                     'message': "",
-                     'version': self.VERSION,
-                     'git_url': self.GIT_URL,
-                     'git_commit_hash': self.GIT_COMMIT_HASH}
-        #END_STATUS
-        return [returnVal]
+    #     # At some point might do deeper type checking...
+    #     if not isinstance(output, dict):
+    #         raise ValueError('Method run_SnekmerLearnApply return value ' +
+    #                          'output is not type dict as required.')
+    #     # return the results
+    #     return [output]
+    # def status(self, ctx):
+    #     #BEGIN_STATUS
+    #     returnVal = {'state': "OK",
+    #                  'message': "",
+    #                  'version': self.VERSION,
+    #                  'git_url': self.GIT_URL,
+    #                  'git_commit_hash': self.GIT_COMMIT_HASH}
+    #     #END_STATUS
+    #     return [returnVal]
