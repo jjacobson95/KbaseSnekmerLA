@@ -19,7 +19,7 @@ class SnekmerLearnApply:
 
     Module Description:
     A KBase module: SnekmerLearnApply
-This sample module contains one small method that filters contigs.
+    Change this sometime...
     '''
 
     ######## WARNING FOR GEVENT USERS ####### noqa
@@ -61,13 +61,25 @@ This sample module contains one small method that filters contigs.
         # return variables are: output
         #BEGIN run_SnekmerLearnApply
         #END run_SnekmerLearnApply
-
+        
+        
+        #For me. I think this is where i make my script
+        #Steps:
+        # 1 Gather inputs
+        # 2 Build cofig file
+        # 3 Pull this  - annotation option from dropdown. 
+        # 4 Run snekmer learn / apply.
+        # For learn - this might be stored as KBaseExperiments.CorrelationMatrix
+        # For apply - the output might be KBaseSequences.ProteinSequenceSet
+        # Annotations should be built into the docker image. Remove all but the one on dropdown
+        
+        print("glub")
         # At some point might do deeper type checking...
-        if not isinstance(output, dict):
-            raise ValueError('Method run_SnekmerLearnApply return value ' +
-                             'output is not type dict as required.')
-        # return the results
-        return [output]
+        # if not isinstance(output, dict):
+        #     raise ValueError('Method run_SnekmerLearnApply return value ' +
+        #                      'output is not type dict as required.')
+        # # return the results
+        return ["glub"]
     def status(self, ctx):
         #BEGIN_STATUS
         returnVal = {'state': "OK",

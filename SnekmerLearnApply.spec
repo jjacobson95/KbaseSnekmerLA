@@ -1,6 +1,7 @@
 /*
 A KBase module: SnekmerLearnApply
 This sample module contains one small method that filters contigs.
+This will have to be changed soon.
 */
 
 module SnekmerLearnApply {
@@ -10,8 +11,6 @@ module SnekmerLearnApply {
     } ReportResults;
 
     funcdef run_SnekmerLearnApply(mapping<string,UnspecifiedObject> params) returns (ReportResults output) authentication required;
-
-
 
 
 };
