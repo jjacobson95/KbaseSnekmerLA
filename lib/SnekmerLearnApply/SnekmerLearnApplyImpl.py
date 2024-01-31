@@ -62,7 +62,8 @@ class SnekmerLearnApply:
         #BEGIN run_SnekmerLearnApply
         #END run_SnekmerLearnApply
         
-        
+        print(params)
+        print(params.input_seqs)
         #For me. I think this is where i make my script
         #Steps:
         # 1 Gather inputs
@@ -74,12 +75,13 @@ class SnekmerLearnApply:
         # Annotations should be built into the docker image. Remove all but the one on dropdown
         
         print("glub")
+        output = {"glub":"gloo"}
         # At some point might do deeper type checking...
         # if not isinstance(output, dict):
         #     raise ValueError('Method run_SnekmerLearnApply return value ' +
         #                      'output is not type dict as required.')
         # # return the results
-        return ["glub"]
+        return [output]
     def status(self, ctx):
         #BEGIN_STATUS
         returnVal = {'state': "OK",
