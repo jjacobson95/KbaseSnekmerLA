@@ -31,16 +31,6 @@ parameters :
         ui-name : |
             Protein Fasta
         short-hint : |
-            Each sequence within this file will be annotated using Snekmer Apply with TIGRFAMs annotations.
-    # kmer_length :
-    #     ui-name : |
-    #         Kmer Length
-    #     short-hint : |
-    #         Length Kmers should be set to. Recommendation varies depending on alphabet.
-    # alphabet :
-    #     ui-name : |
-    #         Amino Acid Re-encoding Alphabet
-    #     short-hint : |
-    #         Amino acids are re-encoded based on different properties such has hydrophobicity or solvent accessibility. 
+            Each sequence within this file will be annotated using Snekmer Apply with TIGRFAMs annotations. 
 description : |
     <p>The user supplies files containing sequences in an appropriate format (e.g. Protein FASTA files). Snekmer uses cosine distance to predict the annotation of each sequence from the pre-built kmer counts matrix. The output is a table for each file containing sequence annotation predictions with confidence levels.</p>
