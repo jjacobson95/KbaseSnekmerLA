@@ -33,4 +33,4 @@ parameters :
         short-hint : |
             Each sequence within this file will be annotated using Snekmer Apply with TIGRFAMs annotations. 
 description : |
-    <p>The user supplies files containing sequences in an appropriate format (e.g. Protein FASTA files). Snekmer uses cosine distance to predict the annotation of each sequence from the pre-built kmer counts matrix. The output is a table for each file containing sequence annotation predictions with confidence levels.</p>
+    <p> v2 The user supplies files containing sequences in an appropriate format (e.g. Protein FASTA files). Snekmer uses cosine distance to predict the annotation of each sequence from the pre-built kmer counts matrix. The output is a table for each file containing sequence annotation predictions with confidence levels.</p>
