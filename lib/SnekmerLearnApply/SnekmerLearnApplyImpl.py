@@ -19,7 +19,8 @@ class SnekmerLearnApply:
 
     Module Description:
     A KBase module: SnekmerLearnApply
-    Change this sometime...
+This sample module contains one small method that filters contigs.
+This will have to be changed soon.
     '''
 
     ######## WARNING FOR GEVENT USERS ####### noqa
@@ -30,7 +31,7 @@ class SnekmerLearnApply:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/jjacobson95/KbaseSnekmerLA.git"
-    GIT_COMMIT_HASH = "f1acd140129108b833d4cc8341a7f7c8f250cf67"
+    GIT_COMMIT_HASH = "1421a376a1e6a3f23c863257f976721e20b6acce"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
@@ -61,26 +62,12 @@ class SnekmerLearnApply:
         # return variables are: output
         #BEGIN run_SnekmerLearnApply
         #END run_SnekmerLearnApply
-        
-        print(params)
-        print(params.input_seqs)
-        #For me. I think this is where i make my script
-        #Steps:
-        # 1 Gather inputs
-        # 2 Build cofig file
-        # 3 Pull this  - annotation option from dropdown. 
-        # 4 Run snekmer learn / apply.
-        # For learn - this might be stored as KBaseExperiments.CorrelationMatrix
-        # For apply - the output might be KBaseSequences.ProteinSequenceSet
-        # Annotations should be built into the docker image. Remove all but the one on dropdown
-        
-        print("glub")
-        output = {"glub":"gloo"}
+
         # At some point might do deeper type checking...
-        # if not isinstance(output, dict):
-        #     raise ValueError('Method run_SnekmerLearnApply return value ' +
-        #                      'output is not type dict as required.')
-        # # return the results
+        if not isinstance(output, dict):
+            raise ValueError('Method run_SnekmerLearnApply return value ' +
+                             'output is not type dict as required.')
+        # return the results
         return [output]
     def status(self, ctx):
         #BEGIN_STATUS
