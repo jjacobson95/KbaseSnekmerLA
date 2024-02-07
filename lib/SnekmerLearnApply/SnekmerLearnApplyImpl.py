@@ -120,6 +120,20 @@ This will have to be changed soon.
         report_info = report_client.create_extended_report(report_params)
         
         
+        logging.info(os.getcwd())
+        logging.info(os.listdir())
+        
+        cmd_string = "snekmer apply"
+        cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
+                                       stderr=subprocess.STDOUT, cwd=self.shared_folder,
+                                       shell=True)
+        cmd_process.wait()
+        logging.info('return code: ' + str(cmd_process.returncode))
+        logging.info("="*80)
+        output, errors = cmd_process.communicate()
+        logging.info("output: " + str(output) + '\n')
+        logging.info("errors: " + str(errors) + '\n')
+    
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
