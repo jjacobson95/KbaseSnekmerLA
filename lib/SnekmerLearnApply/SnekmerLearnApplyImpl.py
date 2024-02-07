@@ -60,6 +60,11 @@ This will have to be changed soon.
         # return variables are: output
         #BEGIN run_SnekmerLearnApply
 
+
+        logging.info('Starting run_Snekmer_search function. Params=' + pformat(params))
+
+        logging.info('Validating parameters.')
+
         # check inputs
         workspace_name = params['workspace_name']
         if 'input_seqs' not in params:
@@ -71,6 +76,8 @@ This will have to be changed soon.
         # report_info = report.create({'report': {'objects_created': [],
         #                                 'text_message': text_message},
         #                                 'workspace_name': params['workspace_name']})
+        
+        logging.info(text_message)
         
         
         report_params = {
