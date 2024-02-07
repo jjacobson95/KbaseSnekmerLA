@@ -91,12 +91,13 @@ This will have to be changed soon.
         logging.info(sys.version)
         # logging.info(protein_seq_set)
     
-    
         output_file_path = "output1.fasta"
-        
+
         with open(output_file_path, 'w') as fasta_file:
-            # Iterate over each sequence in the ProteinSequenceSet
-            for seq in protein_seq_set['data']['sequences']:
+            # Assuming we want the first item in the list which contains 'sequences'
+            sequences_data = protein_seq_set['data'][0]['data']['sequences']  # Adjusted access here
+            # Iterate over each sequence
+            for seq in sequences_data:
                 # Construct the header with sequence ID and description using str.format()
                 header = ">{} {}".format(seq['id'], seq['description'])
                 # Write the header and sequence to the FASTA file
