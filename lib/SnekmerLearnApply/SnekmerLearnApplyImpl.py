@@ -77,9 +77,10 @@ This will have to be changed soon.
         input_seqs = params['input_seqs']
 
 
-        text_message = '\n'.join(params['input_seqs'])
-        
-        protein_seq_set= self.wsClient.get_objects2({'objects': [{'ref': text_message}]})
+        object_refs = [{'ref': ref} for ref in input_seqs]
+
+        # Fetch the objects using get_objects2
+        protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
 
         # report = KBaseReport(self.callback_url)
         # text_message = '\n'.join(params['input_seqs'])
@@ -87,32 +88,32 @@ This will have to be changed soon.
         #                                 'text_message': text_message},
         #                                 'workspace_name': params['workspace_name']})
         
-        logging.info(text_message)
+        logging.info(object_refs)
         logging.info(sys.version)
         # logging.info(protein_seq_set)
     
         output_file_path = "output1.fasta"
-
         with open(output_file_path, 'w') as fasta_file:
-            # Assuming we want the first item in the list which contains 'sequences'
-            sequences_data = protein_seq_set['data'][0]['data']['sequences']  # Adjusted access here
-            # Iterate over each sequence
-            for seq in sequences_data:
-                # Construct the header with sequence ID and description using str.format()
-                header = ">{} {}".format(seq['id'], seq['description'])
-                # Write the header and sequence to the FASTA file
-                fasta_file.write("{}\n{}\n".format(header, seq['sequence']))
+            # Iterate over each fetched object in the response
+            for obj in response['data']:
+                # Extract sequences data for each object
+                sequences_data = obj['data']['sequences']
+                # Iterate over each sequence
+                for seq in sequences_data:
+                    # Construct the header with sequence ID and description
+                    header = ">{} {}".format(seq['id'], seq['description'])
+                    # Write the header and sequence to the FASTA file
+                    fasta_file.write("{}\n{}\n".format(header, seq['sequence']))
 
+        # Read the FASTA file and log the first 40 sequences
         sequences = list(SeqIO.parse(output_file_path, 'fasta'))
-
-        # Example: Print each sequence's ID and its first 60 nucleotides
         for seq_record in sequences[0:40]:
             logging.info("ID: {}".format(seq_record.id))
             logging.info("Description: {}".format(seq_record.description))
             logging.info("Sequence: {}\n".format(str(seq_record.seq)[:60]))
-    
+            
         report_params = {
-            'message': text_message,
+            'message': object_refs,
             'workspace_name': workspace_name,
             'objects_created': []}
 
