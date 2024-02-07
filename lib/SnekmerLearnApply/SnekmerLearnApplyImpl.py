@@ -95,7 +95,7 @@ This will have to be changed soon.
         output_file_path = "output1.fasta"
         with open(output_file_path, 'w') as fasta_file:
             # Iterate over each fetched object in the response
-            for obj in response['data']:
+            for obj in protein_seq_set['data']:
                 # Extract sequences data for each object
                 sequences_data = obj['data']['sequences']
                 # Iterate over each sequence
