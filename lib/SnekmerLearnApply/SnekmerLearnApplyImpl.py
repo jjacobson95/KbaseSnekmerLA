@@ -6,6 +6,8 @@ import os
 from pprint import pformat
 import subprocess 
 from Bio import SeqIO
+import sys
+
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
@@ -86,6 +88,7 @@ This will have to be changed soon.
         #                                 'workspace_name': params['workspace_name']})
         
         logging.info(text_message)
+        logging.info(sys.version)
         # logging.info(protein_seq_set)
     
     
@@ -94,19 +97,18 @@ This will have to be changed soon.
         with open(output_file_path, 'w') as fasta_file:
             # Iterate over each sequence in the ProteinSequenceSet
             for seq in protein_seq_set['data']['sequences']:
-                # Construct the header with sequence ID and description
-                header = f">{seq['id']} {seq['description']}"
+                # Construct the header with sequence ID and description using str.format()
+                header = ">{} {}".format(seq['id'], seq['description'])
                 # Write the header and sequence to the FASTA file
-                fasta_file.write(f"{header}\n{seq['sequence']}\n")
-        
-        
+                fasta_file.write("{}\n{}\n".format(header, seq['sequence']))
+
         sequences = list(SeqIO.parse(output_file_path, 'fasta'))
 
         # Example: Print each sequence's ID and its first 60 nucleotides
         for seq_record in sequences[0:40]:
-            logging.info(f"ID: {seq_record.id}")
-            logging.info(f"Description: {seq_record.description}")
-            logging.info(f"Sequence: {str(seq_record.seq)[:60]}...\n")
+            logging.info("ID: {}".format(seq_record.id))
+            logging.info("Description: {}".format(seq_record.description))
+            logging.info("Sequence: {}\n".format(str(seq_record.seq)[:60]))
     
         report_params = {
             'message': text_message,
