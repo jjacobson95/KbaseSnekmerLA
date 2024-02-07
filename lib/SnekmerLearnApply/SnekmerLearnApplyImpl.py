@@ -9,6 +9,7 @@ from Bio import SeqIO
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 #END_HEADER
 
 
@@ -46,6 +47,8 @@ This will have to be changed soon.
         # saved in the constructor.
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
+        self.workspaceURL = config['workspace-url']
+        self.wsClient = workspaceService(self.workspaceURL)
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -71,15 +74,23 @@ This will have to be changed soon.
             raise ValueError('Parameter kmer is not set in input arguments')
         input_seqs = params['input_seqs']
 
+
+
+        protein_seq_set= self.wsClient.get_objects2({'objects': [{'ref': input_seqs}]})
+
         # report = KBaseReport(self.callback_url)
         text_message = '\n'.join(params['input_seqs'])
         # report_info = report.create({'report': {'objects_created': [],
         #                                 'text_message': text_message},
         #                                 'workspace_name': params['workspace_name']})
         
+        
+        
         logging.info(text_message)
-        
-        
+        logging.info(protein_seq_set)
+
+
+    
         report_params = {
             'message': text_message,
             'workspace_name': workspace_name,
