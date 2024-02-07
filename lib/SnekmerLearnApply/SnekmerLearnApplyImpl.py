@@ -77,7 +77,7 @@ This will have to be changed soon.
 
         text_message = '\n'.join(params['input_seqs'])
         
-        protein_seq_set= self.wsClient.get_objects2({'objects': [{'ref': input_seqs}]})
+        protein_seq_set= self.wsClient.get_objects2({'objects': [{'ref': text_message}]})
 
         # report = KBaseReport(self.callback_url)
         # text_message = '\n'.join(params['input_seqs'])
