@@ -119,9 +119,12 @@ This will have to be changed soon.
         report_client = KBaseReport(self.callback_url)
         report_info = report_client.create_extended_report(report_params)
         
+        cwd = os.getcwd()
+        cwd_contents = os.listdir(cwd)
         
         logging.info(os.getcwd())
-        logging.info(os.listdir())
+        logging.info(cwd_contents)
+        
         
         cmd_string = "snekmer apply"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
