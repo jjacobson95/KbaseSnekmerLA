@@ -52,21 +52,71 @@ This will have to be changed soon.
         pass
 
 
-    def run_SnekmerLearnApply(self, ctx, params):
-        """
-        :param params: instance of mapping from String to unspecified object
-        :returns: instance of type "ReportResults" -> structure: parameter
-           "report_name" of String, parameter "report_ref" of String
-        """
-        # ctx is the context object
-        # return variables are: output
-        #BEGIN run_SnekmerLearnApply
-        #END run_SnekmerLearnApply
 
+    def run_SnekmerLearnApply(self, ctx, params):
+        # ctx is the context object
+        # return variables are: returnVal
+        # BEGIN run_SnekmerLearnApply
+
+        # Initialize logging
+        logging.basicConfig(level=logging.INFO)
+        log_messages = []
+
+        # Step 1 - Validate and extract the parameters
+        log_messages.append('Starting run_SnekmerLearnApply function. Params=' + pformat(params))
+        if 'input_seqs' not in params:
+            error_message = 'Parameter input_seqs is not set in input arguments'
+            log_messages.append(error_message)
+            logging.error(error_message)
+            raise ValueError(error_message)
+        input_seqs_ref = params['input_seqs']
+
+        # Step 2 - Retrieve the ProteinSequenceSet object
+        log_messages.append(f'Retrieving ProteinSequenceSet with ref: {input_seqs_ref}')
+        try:
+            # Placeholder for actual code to retrieve the ProteinSequenceSet object using input_seqs_ref
+            # This should be replaced with actual data retrieval logic
+            protein_seq_set = {
+                'id': 'example_id',
+                'md5': 'example_md5',
+                'description': 'example_description',
+                'sequences': [
+                    {'id': 'seq1', 'sequence': 'MEEPQSDPSV', 'md5': 'example_md5_1'},
+                    {'id': 'seq2', 'sequence': 'EEPQSDPSVE', 'md5': 'example_md5_2'}
+                ]
+            }
+            log_messages.append(f'ProteinSequenceSet details: {pformat(protein_seq_set)}')
+        except Exception as e:
+            error_message = 'Error retrieving ProteinSequenceSet: ' + str(e)
+            log_messages.append(error_message)
+            logging.error(error_message)
+            raise
+
+        # Log steps (for illustration purposes, replace with actual steps in your function)
+        # ...
+
+        # Step X - Build a Report and return (assuming KBaseReport is properly initialized elsewhere)
+        reportObj = {
+            'text_message': '\n'.join(log_messages)
+        }
+        # Assuming KBaseReport is properly initialized and available
+        report = KBaseReport(self.callback_url)
+        report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
+
+        # Construct the output to send back
+        output = {
+            'report_name': report_info['name'],
+            'report_ref': report_info['ref']
+        }
+
+        # END run_SnekmerLearnApply
+
+        if not isinstance(output, dict):
+            raise ValueError('Method run_SnekmerLearnApply return value output is not type dict as required.')
+        return [output]
+            
         # At some point might do deeper type checking...
-        
-        print(params)
-        print(vars(params))
+    
         #For me. I think this is where i make my script
         #Steps:
         # 1 Gather inputs
@@ -76,15 +126,8 @@ This will have to be changed soon.
         # For learn - this might be stored as KBaseExperiments.CorrelationMatrix
         # For apply - the output might be KBaseSequences.ProteinSequenceSet
         # Annotations should be built into the docker image. Remove all but the one on dropdown
-        
-        print("glub")
-        output = {"glub":"gloo"}
+
         # At some point might do deeper type checking...
-        # if not isinstance(output, dict):
-        #     raise ValueError('Method run_SnekmerLearnApply return value ' +
-        #                      'output is not type dict as required.')
-        # # return the results
-        return [output]
     
     def status(self, ctx):
         #BEGIN_STATUS
