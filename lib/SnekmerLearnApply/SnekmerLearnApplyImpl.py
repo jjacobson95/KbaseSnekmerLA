@@ -66,11 +66,22 @@ This will have to be changed soon.
             raise ValueError('Parameter kmer is not set in input arguments')
         input_seqs = params['input_seqs']
 
-        report = KBaseReport(self.callback_url)
+        # report = KBaseReport(self.callback_url)
         text_message = '\n'.join(params['input_seqs'])
-        report_info = report.create({'report': {'objects_created': [],
-                                        'text_message': text_message},
-                                        'workspace_name': params['workspace_name']})
+        # report_info = report.create({'report': {'objects_created': [],
+        #                                 'text_message': text_message},
+        #                                 'workspace_name': params['workspace_name']})
+        
+        
+        report_params = {
+            'message': text_message,
+            'workspace_name': workspace_name,
+            'objects_created': []}
+
+        report_client = KBaseReport(self.callback_url)
+        report_info = report_client.create_extended_report(report_params)
+        
+        
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
