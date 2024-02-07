@@ -86,7 +86,27 @@ This will have to be changed soon.
         #                                 'workspace_name': params['workspace_name']})
         
         logging.info(text_message)
-        logging.info(protein_seq_set)
+        # logging.info(protein_seq_set)
+    
+    
+        output_file_path = "output1.fasta"
+        
+        with open(output_file_path, 'w') as fasta_file:
+            # Iterate over each sequence in the ProteinSequenceSet
+            for seq in protein_seq_set['data']['sequences']:
+                # Construct the header with sequence ID and description
+                header = f">{seq['id']} {seq['description']}"
+                # Write the header and sequence to the FASTA file
+                fasta_file.write(f"{header}\n{seq['sequence']}\n")
+        
+        
+        sequences = list(SeqIO.parse(output_file_path, 'fasta'))
+
+        # Example: Print each sequence's ID and its first 60 nucleotides
+        for seq_record in sequences[0:40]:
+            logging.info(f"ID: {seq_record.id}")
+            logging.info(f"Description: {seq_record.description}")
+            logging.info(f"Sequence: {str(seq_record.seq)[:60]}...\n")
     
         report_params = {
             'message': text_message,
