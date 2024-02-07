@@ -52,10 +52,9 @@ This will have to be changed soon.
         pass
 
 
-
     def run_SnekmerLearnApply(self, ctx, params):
         # ctx is the context object
-        # return variables are: returnVal
+        # return variables are: output
         # BEGIN run_SnekmerLearnApply
 
         # Initialize logging
