@@ -75,21 +75,18 @@ This will have to be changed soon.
         input_seqs = params['input_seqs']
 
 
-
+        text_message = '\n'.join(params['input_seqs'])
+        
         protein_seq_set= self.wsClient.get_objects2({'objects': [{'ref': input_seqs}]})
 
         # report = KBaseReport(self.callback_url)
-        text_message = '\n'.join(params['input_seqs'])
+        # text_message = '\n'.join(params['input_seqs'])
         # report_info = report.create({'report': {'objects_created': [],
         #                                 'text_message': text_message},
         #                                 'workspace_name': params['workspace_name']})
         
-        
-        
         logging.info(text_message)
         logging.info(protein_seq_set)
-
-
     
         report_params = {
             'message': text_message,
