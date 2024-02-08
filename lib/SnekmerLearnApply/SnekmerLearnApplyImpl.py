@@ -160,7 +160,7 @@ This will have to be changed soon.
             'objects_created': [],
             'file_links': [
                 {
-                    'path': '/kb/tmp/output/apply/kmer-summary-output1.csv',
+                    'path': '/kb/module/output/apply/kmer-summary-output1.csv',
                     'name': 'kmer-summary-output1.csv',  
                     'label': 'Kmer Summary Output',
                     'description': 'Summary of kmer analysis'
