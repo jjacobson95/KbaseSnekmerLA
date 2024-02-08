@@ -128,16 +128,20 @@ This will have to be changed soon.
         logging.info(cwd_contents)
         
         
-        cmd_string = "snekmer apply --configfiles=/kb/module/work/tmp/config.yaml --cores=4"
+        cmd_string = "snekmer apply --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT, cwd=os.getcwd(),
                                        shell=True)
+        
         output, errors = cmd_process.communicate()
         logging.info('return code: ' + str(cmd_process.returncode))
         logging.info("="*80)
         logging.info("output: " + str(output) + '\n')
         logging.info("errors: " + str(errors) + '\n')
         logging.info(cwd_contents)
+        
+        apply_contents = os.listdir(os.path.join(cwd_contents,"output","apply"))
+        logging.info(apply_contents)
     
     
         result_file = "output/apply/kmer-summary-output1.csv"
