@@ -143,7 +143,7 @@ This will have to be changed soon.
         logging.info(str(cwd_contents))
         
         apply_dir_path = os.path.join(cwd, "output", "apply")
-        logging.info(apply_dir_path)
+        logging.info(os.listdir(apply_dir_path))
     
     
         # result_file = "output/apply/kmer-summary-output1.csv"
@@ -157,8 +157,17 @@ This will have to be changed soon.
         report_params = {
             'message': text_message,
             'workspace_name': workspace_name,
-            'objects_created': []}
-        
+            'objects_created': [],
+            'file_links': [
+                {
+                    'path': '/kb/tmp/output/apply/kmer-summary-output1.csv',
+                    'name': 'kmer-summary-output1.csv',  
+                    'label': 'Kmer Summary Output',
+                    'description': 'Summary of kmer analysis'
+                }
+            ]
+        }
+
         report_client = KBaseReport(self.callback_url)
         report_info = report_client.create_extended_report(report_params)
     
