@@ -92,7 +92,15 @@ This will have to be changed soon.
         logging.info(sys.version)
         # logging.info(protein_seq_set)
     
-        output_file_path = "output1.fasta"
+    
+        output_dir = "input"
+        output_file_name = "output1.fasta"
+        output_file_path = os.path.join(output_dir, output_file_name)
+
+        # Ensure the output directory exists
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+    
         with open(output_file_path, 'w') as fasta_file:
             # Iterate over each fetched object in the response
             for obj in protein_seq_set['data']:
