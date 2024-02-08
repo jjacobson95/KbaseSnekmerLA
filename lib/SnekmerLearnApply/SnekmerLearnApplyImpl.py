@@ -130,18 +130,20 @@ This will have to be changed soon.
         
         cmd_string = "snekmer apply --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
-                                       stderr=subprocess.STDOUT, cwd=os.getcwd(),
-                                       shell=True)
+                                    stderr=subprocess.STDOUT, cwd=os.getcwd(),
+                                    shell=True)
         
         output, errors = cmd_process.communicate()
         logging.info('return code: ' + str(cmd_process.returncode))
         logging.info("="*80)
         logging.info("output: " + str(output) + '\n')
         logging.info("errors: " + str(errors) + '\n')
-        logging.info(cwd_contents)
+                
+        cwd_contents = os.listdir(os.getcwd())
+        logging.info(str(cwd_contents))
         
-        apply_contents = os.listdir(os.path.join(cwd_contents,"output","apply"))
-        logging.info(apply_contents)
+        apply_dir_path = os.path.join(cwd, "output", "apply")
+        logging.info(apply_dir_path)
     
     
         result_file = "output/apply/kmer-summary-output1.csv"
