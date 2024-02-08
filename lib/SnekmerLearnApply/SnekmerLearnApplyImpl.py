@@ -135,9 +135,9 @@ This will have to be changed soon.
         logging.info(cwd_contents)
         
         
-        cmd_string = "snekmer apply"
+        cmd_string = "snekmer apply --configfiles=/kb/module/work/tmp/config.yaml --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
-                                       stderr=subprocess.STDOUT, cwd=self.shared_folder,
+                                       stderr=subprocess.STDOUT, cwd=os.getcwd(),
                                        shell=True)
         cmd_process.wait()
         logging.info('return code: ' + str(cmd_process.returncode))
