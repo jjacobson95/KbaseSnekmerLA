@@ -10,7 +10,6 @@ import sys
 import zipfile
 import uuid
 from datetime import datetime
-import pandas as pd
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
