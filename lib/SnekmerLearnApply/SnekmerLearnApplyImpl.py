@@ -99,6 +99,7 @@ This will have to be changed soon.
         #                                 'workspace_name': params['workspace_name']})
         
         logging.info(object_refs)
+        logging.info(protein_seq_set)
         logging.info(sys.version)
         # logging.info(protein_seq_set)
     
@@ -188,11 +189,12 @@ This will have to be changed soon.
                     }
                 }
                 ontology_events.append(ontology_event)
+        logging.info(ontology_events)
 
         # Use the cb_annotation_ontology_api to add the ontology events
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         params = {
-            "input_ref": object_refs[0],
+            "input_ref": protein_seq_set,
             "events": ontology_events,
             "output_name": "updated_protein_set_with_annotations",
             "output_workspace": params['workspace_name'],
@@ -200,6 +202,8 @@ This will have to be changed soon.
         # Call the method to add ontology events
         update_result = ontology_api.add_annotation_ontology_events(params)
         updated_protein_set_ref = update_result.get('output_ref')
+        
+        
         # New Stuff end
 
 
