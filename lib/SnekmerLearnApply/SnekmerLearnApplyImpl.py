@@ -159,17 +159,9 @@ This will have to be changed soon.
         specific_file_path = os.path.join(cwd, "output", "apply", "kmer-summary-output1.csv")
         logging.info(specific_file_path)
 
-        # Setup output directory for the ZIP file
-        output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
-        os.makedirs(output_directory)
-        run_date = datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p")
-        result_name = "KmerSummaryOutput" + run_date + ".zip"
-        result_file = os.path.join(output_directory, result_name)
-
-
         ### new stuff
         # Read the results into a DataFrame
-        with open(result_file, 'r') as csvfile:
+        with open(specific_file_path, 'r') as csvfile:
             csvreader = csv.DictReader(csvfile, delimiter='\t')
             ontology_events = []
             for row in csvreader:
@@ -210,6 +202,13 @@ This will have to be changed soon.
         updated_protein_set_ref = update_result.get('output_ref')
         # New Stuff end
 
+
+        # Setup output directory for the ZIP file
+        output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
+        os.makedirs(output_directory)
+        run_date = datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p")
+        result_name = "KmerSummaryOutput" + run_date + ".zip"
+        result_file = os.path.join(output_directory, result_name)
 
         # Zip the specific output file
         with zipfile.ZipFile(result_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True) as zip_file:
