@@ -10,6 +10,7 @@ import sys
 import zipfile
 import uuid
 from datetime import datetime
+import csv
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
@@ -168,34 +169,33 @@ This will have to be changed soon.
 
         ### new stuff
         # Read the results into a DataFrame
-        annotations_df = pd.read_csv(result_file)
-
-        # Prepare the ontology events based on your result_file structure
-        ontology_events = []
-        for index, row in annotations_df.iterrows():
-            ontology_event = {
-                "event_id": "your_event_id",  # This should be a unique ID for the event
-                "description": "Protein annotation event",
-                "ontology_id": row['Prediction'],  # Assuming this is the ontology ID
-                "method": "SnekmerLearnApply_annotation",
-                "method_version": "1.0",
-                "timestamp": datetime.now().isoformat(),
-                "feature_types": {},  # Fill in if you have feature types
-                "ontology_terms": {
-                    row['index']: [  # The protein ID
-                        {
-                            "term": row['Prediction'],
-                            "modelseed_ids": [],  # Fill in if you have ModelSEED IDs
-                            "evidence_only": 0,
-                            "evidence": {
-                                "reference": ("protein_annotation", "SnekmerLearnApply"),
-                                "scores": {"confidence": row['Confidence']}  # Or any other scores
+        with open(result_file, 'r') as csvfile:
+            csvreader = csv.DictReader(csvfile, delimiter='\t')
+            ontology_events = []
+            for row in csvreader:
+                ontology_event = {
+                    "event_id": "your_event_id",
+                    "description": "Protein annotation event",
+                    "ontology_id": row['Prediction'],
+                    "method": "SnekmerLearnApply_annotation",
+                    "method_version": "1.0",
+                    "timestamp": datetime.now().isoformat(),
+                    "feature_types": {},
+                    "ontology_terms": {
+                        row['index']: [
+                            {
+                                "term": row['Prediction'],
+                                "modelseed_ids": [],
+                                "evidence_only": 0,
+                                "evidence": {
+                                    "reference": ("protein_annotation", "SnekmerLearnApply"),
+                                    "scores": {"confidence": row['Confidence']}
+                                }
                             }
-                        }
-                    ]
+                        ]
+                    }
                 }
-            }
-            ontology_events.append(ontology_event)
+                ontology_events.append(ontology_event)
 
         # Use the cb_annotation_ontology_api to add the ontology events
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
