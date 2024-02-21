@@ -14,7 +14,7 @@ from datetime import datetime
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace as workspaceService
-from installed_clients.cb_annotation_ontology_apiClient import CBAnnotationOntologyAPI
+from installed_clients.cb_annotation_ontology_apiClient import cb_annotation_ontology_api
 
 # from installed_clients.DataFileUtilClient import DataFileUtil
 # from installed_clients.GenomeFileUtilClient import GenomeFileUtil
@@ -198,7 +198,7 @@ This will have to be changed soon.
             ontology_events.append(ontology_event)
 
         # Use the cb_annotation_ontology_api to add the ontology events
-        ontology_api = CBAnnotationOntologyAPI(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
+        ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         params = {
             "input_ref": object_refs[0],
             "events": ontology_events,
