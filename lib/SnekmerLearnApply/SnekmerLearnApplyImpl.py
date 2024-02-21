@@ -198,6 +198,7 @@ This will have to be changed soon.
             "events": ontology_events,
             "output_name": "updated_protein_set_with_annotations",
             "output_workspace": params['workspace_name'],
+            "save": 1,
         }
         # Call the method to add ontology events
         update_result = ontology_api.add_annotation_ontology_events(params)
