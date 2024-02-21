@@ -162,7 +162,7 @@ This will have to be changed soon.
         ### new stuff
         # Read the results into a DataFrame
         with open(specific_file_path, 'r') as csvfile:
-            csvreader = csv.DictReader(csvfile, delimiter='\t')
+            csvreader = csv.DictReader(csvfile)
             ontology_events = []
             for row in csvreader:
                 ontology_event = {
