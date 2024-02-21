@@ -160,7 +160,7 @@ This will have to be changed soon.
         specific_file_path = os.path.join(cwd, "output", "apply", "kmer-summary-output1.csv")
         logging.info(specific_file_path)
 
-        ### new stuff
+        ### This may work for
         # Read the results into a DataFrame
         with open(specific_file_path, 'r') as csvfile:
             csvreader = csv.DictReader(csvfile)
