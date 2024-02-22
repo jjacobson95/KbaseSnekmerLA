@@ -257,10 +257,20 @@ This will have to be changed soon.
 
         sequences = protein_seq_set['data'][0]['data']['sequences']
 
-        for item in sequences:
-            if item["id"] in all_predictions:
-                item["ontology_terms"] = all_predictions[item["id"]]["prediction"]
+        # for item in sequences:
+        #     if item["id"] in all_predictions:
+        #         item["ontology_terms"] = all_predictions[item["id"]]["prediction"]
 
+        # modified_data = protein_seq_set['data'][0]['data']
+
+
+        for i,item in enumerate(sequences):
+            if item["id"] in all_predictions:
+            # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
+                prediction = all_predictions[item["id"]]["prediction"]
+                ref_id = params['workspace_id'] + "." + i
+                item["ontology_terms"] = {ref_id: [{"term": prediction}]}
+                
         modified_data = protein_seq_set['data'][0]['data']
 
 
