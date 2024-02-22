@@ -269,7 +269,7 @@ This will have to be changed soon.
             # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
                 prediction = all_predictions[item["id"]]["prediction"]
                 ref_id = str(params['workspace_id']) + "." + str(i)
-                item["ontology_terms"] = {ref_id: {"term": prediction}}
+                item["ontology_terms"] = {ref_id: {"term": [prediction]}}
                 
         modified_data = protein_seq_set['data'][0]['data']
 
