@@ -274,7 +274,7 @@ This will have to be changed soon.
 
         # Save the modified object
         save_params_mod = {
-            'workspace': params['workspace_id'],
+            'workspace': params['workspace_name'],
             'objects': [{
                 'type': object_type,
                 'data': modified_data,
