@@ -170,16 +170,7 @@ This will have to be changed soon.
                     "delta":row['delta'],
                     "confidence":row['Confidence']
                 }
-        
-        for item in protein_seq_set["sequences"]:
-            if item["id"] in all_predictions:
-                item["ontology_terms"] = all_predictions[item["id"]]["prediction"]
-
-
-        logging.info("New Protein Set \n\n\n")
-        logging.info(protein_seq_set)
-        
-
+    
 
         ### This might work for a genome object but not for a proteinsequenceset object
         # Read the results into a DataFrame
@@ -272,6 +263,9 @@ This will have to be changed soon.
 
         modified_data = protein_seq_set['data'][0]['data']
 
+
+        logging.info("New Protein Set \n\n\n")
+        logging.info(protein_seq_set)
 
 
         object_name = 'my_protein_fasta2_with_Snekmer_annotations'
