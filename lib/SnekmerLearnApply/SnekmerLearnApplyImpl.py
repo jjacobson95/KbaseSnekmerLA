@@ -101,7 +101,7 @@ This will have to be changed soon.
         logging.info(object_refs)
         # logging.info(protein_seq_set)
         logging.info(sys.version)
-        # logging.info(protein_seq_set)
+        logging.info(protein_seq_set)
     
     
         output_dir = "input"
@@ -156,57 +156,149 @@ This will have to be changed soon.
         apply_dir_path = os.path.join(cwd, "output", "apply")
         logging.info(os.listdir(apply_dir_path))
     
-        # New Stuff start
         specific_file_path = os.path.join(cwd, "output", "apply", "kmer-summary-output1.csv")
         logging.info(specific_file_path)
 
-        ### This may work for
-        # Read the results into a DataFrame
+        # New Stuff start
         with open(specific_file_path, 'r') as csvfile:
             csvreader = csv.DictReader(csvfile)
-            ontology_events = []
+            all_predictions = {}
             for row in csvreader:
-                ontology_event = {
-                    "event_id": "your_event_id",
-                    "description": "Protein annotation event",
-                    "ontology_id": row['Prediction'],
-                    "method": "SnekmerLearnApply_annotation",
-                    "method_version": "1.0",
-                    "timestamp": datetime.now().isoformat(),
-                    "feature_types": {},
-                    "ontology_terms": {
-                        row['index']: [
-                            {
-                                "term": row['Prediction'],
-                                "modelseed_ids": [],
-                                "evidence_only": 0,
-                                "evidence": {
-                                    "reference": ("protein_annotation", "SnekmerLearnApply"),
-                                    "scores": {"confidence": row['Confidence']}
-                                }
-                            }
-                        ]
-                    }
+                all_predictions[row['index']] = {
+                    "prediction": row['Prediction'],
+                    "score":row['Score'],
+                    "delta":row['delta'],
+                    "confidence":row['Confidence']
                 }
-                ontology_events.append(ontology_event)
-        logging.info(ontology_events)
+        
+        for item in protein_seq_set["sequences"]:
+            if item["id"] in all_predictions:
+                item["ontology_terms"] = all_predictions[item["id"]]["prediction"]
+
+
+        logging.info("New Protein Set \n\n\n")
+        logging.info(protein_seq_set)
+        
+
+
+        ### This might work for a genome object but not for a proteinsequenceset object
+        # Read the results into a DataFrame
+        # with open(specific_file_path, 'r') as csvfile:
+        #     csvreader = csv.DictReader(csvfile)
+        #     ontology_events = []
+        #     for row in csvreader:
+        #         ontology_event = {
+        #             "event_id": "your_event_id",
+        #             "description": "Protein annotation event",
+        #             "ontology_id": row['Prediction'],
+        #             "method": "SnekmerLearnApply_annotation",
+        #             "method_version": "1.0",
+        #             "timestamp": datetime.now().isoformat(),
+        #             "feature_types": {},
+        #             "ontology_terms": {
+        #                 row['index']: [
+        #                     {
+        #                         "term": row['Prediction'],
+        #                         "modelseed_ids": [],
+        #                         "evidence_only": 0,
+        #                         "evidence": {
+        #                             "reference": ("protein_annotation", "SnekmerLearnApply"),
+        #                             "scores": {"confidence": row['Confidence']}
+        #                         }
+        #                     }
+        #                 ]
+        #             }
+        #         }
+        #         ontology_events.append(ontology_event)
+        # logging.info(ontology_events)
+
+
+
 
         # Use the cb_annotation_ontology_api to add the ontology events
-        ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
-        params = {
-            "input_ref": object_refs[0]['ref'],
-            "events": ontology_events,
-            "output_name": "updated_protein_set_with_annotations",
-            "output_workspace": params['workspace_name'],
-            "save": 1,
-        }
-        # Call the method to add ontology events
-        update_result = ontology_api.add_annotation_ontology_events(params)
-        updated_protein_set_ref = update_result.get('output_ref')
+        # ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
+        # params = {
+        #     "input_ref": object_refs[0]['ref'],
+        #     "events": ontology_events,
+        #     "output_name": "updated_protein_set_with_annotations",
+        #     "output_workspace": params['workspace_name'],
+        #     "save": 1,
+        # }
+        # # Call the method to add ontology events
+        # update_result = ontology_api.add_annotation_ontology_events(params)
+        # updated_protein_set_ref = update_result.get('output_ref')
         
         
-        # New Stuff end
+        # New Stuff End
 
+
+        #Attempt 2:
+            
+        # def generate_event_id():
+        #     return "event_" + datetime.now().strftime("%Y%m%d%H%M%S")
+
+        # # Read predictions and update ProteinSequence objects
+        # with open(specific_file_path, 'r') as csvfile:
+        #     csvreader = csv.DictReader(csvfile)
+        #     for row in csvreader:
+        #         # Find the matching ProteinSequence by 'id'
+        #         for protein_sequence in protein_seq_set['sequences']:
+        #             if protein_sequence['id'] == row['id']:  # Assuming 'id' column matches
+        #                 # Update the ontology_terms for this ProteinSequence
+        #                 ontology_term = row['Prediction']  # Assuming 'Prediction' column contains the ontology term
+        #                 if ontology_term not in protein_sequence['ontology_terms']:
+        #                     protein_sequence['ontology_terms'][ontology_term] = []
+        #                 # Append an event index to the list for this term
+        #                 # Here, you might need to adapt this based on how you handle ontology_events
+        #                 protein_sequence['ontology_terms'][ontology_term].append(generate_event_id())
+
+        # # Optionally, add a generic ontology event to the ontology_events list if needed
+        # ontology_event = {
+        #     "id": generate_event_id(),
+        #     "ontology_ref": "your_ontology_ref",  # Replace with actual reference
+        #     "method": "SnekmerLearnApply_annotation",
+        #     "method_version": "1.0",
+        #     "timestamp": datetime.now().isoformat(),
+        #     "description": "Protein annotation based on SnekmerLearnApply predictions"
+        # }
+        # protein_seq_set['ontology_events'].append(ontology_event)
+
+
+        sequences = protein_seq_set['data'][0]['data']['sequences']
+
+        for item in sequences:
+            if item["id"] in all_predictions:
+                item["ontology_terms"] = all_predictions[item["id"]]["prediction"]
+
+        modified_data = protein_seq_set['data'][0]['data']
+
+
+
+        object_name = 'my_protein_fasta2_with_Snekmer_annotations'
+        object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
+
+
+        # Save the modified object
+        save_params_mod = {
+            'workspace': params['workspace_id'],
+            'objects': [{
+                'type': object_type,
+                'data': modified_data,
+                'name': object_name
+            }]
+        }
+
+
+
+        result = self.wsClient.save_objects(save_params_mod)
+        logging.info("Object saved successfully:")
+        logging.info("result")
+        # End new stuff
+
+        saved_object_info = result[0]
+        object_id = str(saved_object_info[0])  # Object ID
+        workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+        workspace_ref = "{}/{}".format(workspace_id, object_id)  # Workspace reference
 
         # Setup output directory for the ZIP file
         output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
@@ -221,15 +313,16 @@ This will have to be changed soon.
             zip_file.write(specific_file_path, os.path.basename(specific_file_path))
 
 
-
-
         # Prepare report parameters with the zipped file
         report_params = {
             'message': text_message,
             'workspace_name': workspace_name,
-            'objects_created': [{
-                'ref': updated_protein_set_ref,
-                'description': 'Updated protein set with new ontologies'}],
+            'objects_created': [
+                {
+                    'ref': workspace_ref,
+                    'description': 'Updated protein set with new ontologies and annotations'
+                }
+            ],
             'file_links': [
                 {
                     'path': result_file,
@@ -248,7 +341,6 @@ This will have to be changed soon.
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
-            'protein_set_ref': updated_protein_set_ref
         }
 
         # Log the details for debugging
