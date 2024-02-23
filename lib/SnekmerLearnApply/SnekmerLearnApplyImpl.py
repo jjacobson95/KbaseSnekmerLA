@@ -134,7 +134,7 @@ This will have to be changed soon.
             
             for index, ref in enumerate(protein_input):
                 # Fetch the object for the current reference
-                protein_seq_set = self.wsClient.get_objects2({'objects': [ref]})
+                protein_seq_set = self.wsClient.get_objects2({'objects': {"ref":ref}})
                 
                 # Generate a unique output file name for the current input
                 fasta_index += 1
