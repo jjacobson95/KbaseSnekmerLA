@@ -330,7 +330,7 @@ This will have to be changed soon.
                     "ontology_terms":{all_predictions[item["id"]]["index"] : [
                         {
                             "term" : all_predictions[item["id"]]["prediction"],
-                            "evidence" : {"scores":{"probability":all_predictions[item["id"]]["Confidence"]}}
+                            "evidence" : {"scores":{"probability":all_predictions[item["id"]]["confidence"]}}
                         }
                     ]
                     }
@@ -348,7 +348,6 @@ This will have to be changed soon.
             "events":events
             })
                 
-             
              
         logging.info(output)   
         logging.info(output[0])
