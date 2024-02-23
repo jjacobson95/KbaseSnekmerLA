@@ -327,7 +327,7 @@ This will have to be changed soon.
                     "method_version" : "1.0",
                     "method" : "Snekmer Apply",
                     "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
-                    "ontology_terms":{all_predictions[item["id"]]["index"] : [
+                    "ontology_terms":{all_predictions[item["id"]] : [
                         {
                             "term" : all_predictions[item["id"]]["prediction"],
                             "evidence" : {"scores":{"probability":all_predictions[item["id"]]["confidence"]}}
