@@ -84,7 +84,7 @@ This will have to be changed soon.
         workspace_name = params['workspace_name']
         run_type = []
         if 'protein_input' not in params and 'genome_input' not in params:
-            raise ValueError('Parameter kmer is not set in input arguments')
+            raise ValueError('Neither protein_input nor genome_input found')
         if 'protein_input' in params:
             run_type.append("protein")
             protein_input = params['protein_input']
