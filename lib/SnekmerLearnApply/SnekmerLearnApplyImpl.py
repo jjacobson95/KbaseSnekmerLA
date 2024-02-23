@@ -103,7 +103,7 @@ This will have to be changed soon.
         if "protein" in run_type:
             object_refs = [{'ref': ref} for ref in protein_input]
             # Fetch the objects using get_objects2
-            # protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
+            protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
             text_message = '\n'.join(params['protein_input'])
             
             logging.info(object_refs)
@@ -134,7 +134,7 @@ This will have to be changed soon.
             
             for index, ref in enumerate(protein_input):
                 # Fetch the object for the current reference
-                protein_seq_set = self.wsClient.get_objects2({'objects': {"ref":ref}})
+                protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
                 
                 # Generate a unique output file name for the current input
                 fasta_index += 1
