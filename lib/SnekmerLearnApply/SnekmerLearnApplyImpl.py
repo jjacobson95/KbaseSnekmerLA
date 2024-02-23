@@ -103,13 +103,13 @@ This will have to be changed soon.
         if "protein" in run_type:
             object_refs = [{'ref': ref} for ref in protein_input]
             # Fetch the objects using get_objects2
-            protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
+            # protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
             text_message = '\n'.join(params['protein_input'])
             
             logging.info(object_refs)
             # logging.info(protein_seq_set)
             logging.info(sys.version)
-            logging.info(protein_seq_set)
+            # logging.info(protein_seq_set)
         
             output_dir = "input"
             # output_file_name = "output1.fasta"
