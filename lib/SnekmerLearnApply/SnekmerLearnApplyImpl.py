@@ -341,7 +341,7 @@ This will have to be changed soon.
                 })
         
         
-        output = cb_annotation_ontology_api.add_annotation_ontology_events(self,params={
+        output = cb_annotation_ontology_api.add_annotation_ontology_events(params={
             "input_ref": object_refs[0]['ref'], #Name of your input object
             "input_workspace":params['workspace_id'],#Workspace with your input object
             "output_name":"New_ProteinSetObj_CH_method",#Name to which the modified object should be saved
