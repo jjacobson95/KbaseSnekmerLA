@@ -267,7 +267,7 @@ This will have to be changed soon.
             # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
                 prediction = all_predictions[item["id"]]["prediction"]
                 ref_id = str(params['workspace_id']) + "." + str(i)
-                item["ontology_terms"] = {prediction: {"evidence" : [{"scores":{"probability":confidence}}]}}
+                item["ontology_terms"] = {prediction: {"probability" : confidence}}
                 # item["ontology_terms"] = {index:                       {
                 #             "term" : prediction,
                 #             "evidence" : {"scores":{"probability":confidence}}
