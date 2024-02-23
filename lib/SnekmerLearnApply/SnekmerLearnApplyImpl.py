@@ -314,10 +314,14 @@ This will have to be changed soon.
                 }
         sequences = protein_seq_set['data'][0]['data']['sequences']
         
+        logging.info(sequences)
+        
         events = []
         for i,item in enumerate(sequences):
             if item["id"] in all_predictions:
                 prediction = all_predictions[item["id"]]["prediction"]
+                confidence = all_predictions[item["id"]]["confidence"]
+                index = item["id"]
                 # ref_id = str(params['workspace_id']) + "." + str(i)
                 # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
                 item["ontology_terms"] = {prediction: {"term": []}}
@@ -327,10 +331,10 @@ This will have to be changed soon.
                     "method_version" : "1.0",
                     "method" : "Snekmer Apply",
                     "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
-                    "ontology_terms":{all_predictions[item["id"]] : [
+                    "ontology_terms":{ index : [
                         {
-                            "term" : all_predictions[item["id"]]["prediction"],
-                            "evidence" : {"scores":{"probability":all_predictions[item["id"]]["confidence"]}}
+                            "term" : prediction,
+                            "evidence" : {"scores":{"probability":confidence}}
                         }
                     ]
                     }
