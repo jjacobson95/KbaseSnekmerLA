@@ -352,11 +352,11 @@ This will have to be changed soon.
             for seq_obj_num, ref in enumerate(protein_input):
                 # Fetch the object for the current reference
                 protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
-                sequences = protein_seq_set['data'][seq_obj_num]
+                sequences = protein_seq_set['data'][0]['data']['sequences']
                 
             # for seq_obj_num,sequences in enumerate(protein_seq_set['data']):
 
-                for i,item in enumerate(sequences['data']['sequences'] ):
+                for i,item in enumerate(sequences):
                     if item["id"] in all_predictions:
                         prediction = all_predictions[item["id"]]["prediction"]
                         confidence = all_predictions[item["id"]]["confidence"]
