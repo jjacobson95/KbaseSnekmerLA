@@ -384,34 +384,34 @@ This will have to be changed soon.
                 modified_data = protein_seq_set['data'][0]['data']
 
 
-            logging.info("New Protein Set \n\n\n")
-            logging.info(modified_data)
-            logging.info(protein_seq_set['data'][0]['info'][1])
+                logging.info("New Protein Set \n\n\n")
+                # logging.info(modified_data)
+                logging.info(protein_seq_set['data'][0]['info'][1])
 
-            object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
-            object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
+                object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
 
-            # Save the modified object
-            save_params_mod = {
-                'workspace': params['workspace_name'],
-                'objects': [{
-                    'type': object_type,
-                    'data': modified_data,
-                    'name': object_name
-                }]
-            }
+                # Save the modified object
+                save_params_mod = {
+                    'workspace': params['workspace_name'],
+                    'objects': [{
+                        'type': object_type,
+                        'data': modified_data,
+                        'name': object_name
+                    }]
+                }
 
 
-            result = self.wsClient.save_objects(save_params_mod)
-            logging.info("Object saved successfully:")
-            logging.info("result")
-            
-            saved_object_info_list.append(result[0])
-            object_id_list.append(str(result[0][0]))
-            # object_id = str(result[0][0])  # Object ID
-            workspace_id = params['workspace_id']  # Assuming this is the workspace ID
-            # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
-            workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
+                result = self.wsClient.save_objects(save_params_mod)
+                logging.info("Object saved successfully:")
+                logging.info(result)
+                
+                saved_object_info_list.append(result[0])
+                object_id_list.append(str(result[0][0]))
+                # object_id = str(result[0][0])  # Object ID
+                workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+                # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
+                workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
 
         # ABOVE CODE WORKS - DO NOT REMOVE
     
@@ -505,6 +505,13 @@ This will have to be changed soon.
                     'ref': workspace_ref,
                     'description': 'Updated protein set with new ontologies and annotations'
                 })
+
+
+        # TO DO -- To me...
+        # Current issue is only 1 output is being generated Add log statements to print workspace_ref_list, object_list,saved_object_info_list,object_id_list
+
+        # Idk why only 1 is generated. MAybe overwrite?
+
 
         # Prepare report parameters with the zipped file
         report_params = {
