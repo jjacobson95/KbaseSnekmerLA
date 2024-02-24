@@ -331,7 +331,6 @@ This will have to be changed soon.
                 
                 
                 
-                #this should be fixed. save and run
         for file in file_paths:
             with open(os.path.join(cwd, "output", "apply", file), 'r') as csvfile:
                 csvreader = csv.DictReader(csvfile)
@@ -359,7 +358,7 @@ This will have to be changed soon.
                     # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
                         prediction = all_predictions[item["id"]]["prediction"]
                         ref_id = str(params['workspace_id']) + "." + str(i)
-                        item["ontology_terms"] = {prediction: {"evidence" : confidence}}
+                        item["ontology_terms"] = {prediction: {"evidence":[{"probability":confidence}]}}
                         
                         
                         # item["ontology_terms"] = {index:                       {
