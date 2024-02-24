@@ -348,8 +348,13 @@ This will have to be changed soon.
         object_id_list = []
         workspace_ref_list = []
         if "protein" in run_type:
-            for seq_obj_num,sequences in enumerate(protein_seq_set['data']):
-
+            
+            for seq_obj_num, ref in enumerate(protein_input):
+                # Fetch the object for the current reference
+                protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+                sequences = protein_seq_set['data']
+                
+            # for seq_obj_num,sequences in enumerate(protein_seq_set['data']):
                 for i,item in enumerate(sequences['data']['sequences'] ):
                     if item["id"] in all_predictions:
                         prediction = all_predictions[item["id"]]["prediction"]
@@ -382,7 +387,7 @@ This will have to be changed soon.
             logging.info(modified_data)
             logging.info(protein_seq_set['data'][seq_obj_num]['info'][1])
 
-            object_name = protein_seq_set['data'][seq_obj_num]['info'][1]
+            object_name = protein_seq_set['data'][seq_obj_num]['info'][1] + "_Annotated_with_Snekmer_Apply"
             object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
 
             # Save the modified object
