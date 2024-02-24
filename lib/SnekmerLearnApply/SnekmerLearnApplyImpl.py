@@ -386,9 +386,9 @@ This will have to be changed soon.
 
             logging.info("New Protein Set \n\n\n")
             logging.info(modified_data)
-            logging.info(protein_seq_set['data'][seq_obj_num]['info'][1])
+            logging.info(protein_seq_set['data'][0]['info'][1])
 
-            object_name = protein_seq_set['data'][seq_obj_num]['info'][1] + "_Annotated_with_Snekmer_Apply"
+            object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
             object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
 
             # Save the modified object
