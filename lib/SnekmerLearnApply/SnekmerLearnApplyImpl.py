@@ -381,7 +381,7 @@ This will have to be changed soon.
                         
                         
                         
-                modified_data = protein_seq_set['data'][seq_obj_num]['data']
+                modified_data = protein_seq_set['data'][0]['data']
 
 
             logging.info("New Protein Set \n\n\n")
