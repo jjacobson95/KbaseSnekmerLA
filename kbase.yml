@@ -8,7 +8,7 @@ service-language:
     python
 
 module-version:
-    0.0.64
+    0.0.65
 
 owners:
     [jjacobson]
