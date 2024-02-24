@@ -331,9 +331,9 @@ This will have to be changed soon.
                 
                 
                 
-                
+                #this should be fixed. save and run
         for file in file_paths:
-            with open(file, 'r') as csvfile:
+            with open(os.path.join(cwd, "output", "apply", file), 'r') as csvfile:
                 csvreader = csv.DictReader(csvfile)
                 all_predictions = {}
                 for row in csvreader:
