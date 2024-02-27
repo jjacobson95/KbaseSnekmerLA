@@ -147,18 +147,20 @@ This will have to be changed soon.
                     fasta_index += 1
                     output_file_name = "output_" + str(fasta_index) + ".fasta"
                     output_file_path = os.path.join(output_dir, output_file_name)
-            
+
                     with open(output_file_path, 'w') as fasta_file:
-                        # Iterate over each fetched object in the response (should be only one in this case)
                         for obj in genome_seq_set['data']:
-                            # Extract sequences data for the object
                             sequences_data = obj['data']["cdss"]
-                            # Iterate over each sequence
                             for seq in sequences_data:
-                                # Construct the header with sequence ID and description
-                                header = ">{} {}".format(seq['id'], seq['functions'])
-                                # Write the header and sequence to the FASTA file
+                                if 'functions' in seq:
+                                    function_or_functions = seq['functions']
+                                elif 'function' in seq:
+                                    function_or_functions = seq['function']
+                                else:
+                                    function_or_functions = 'Unknown Function' 
+                                header = ">{} {}".format(seq['id'], function_or_functions)
                                 fasta_file.write("{}\n{}\n".format(header, seq['protein_translation']))
+                                
 
             # Read the FASTA file and log the first 40 sequences
             logging.info("Genome Object(s) Received and parsed into Fasta. ")
@@ -341,11 +343,11 @@ This will have to be changed soon.
         for workspace_ref in workspace_ref_list:
             object_list.append({
                     'ref': workspace_ref,
-                    'description': 'Updated protein set with new ontologies and annotations'
+                    'description': 'Updated object with new ontologies and annotations'
                 })
     
     
-        text_message = "All Objects Successfully Annotated With TIGRFAMs Using Snekmer Apply.\nObjects listed above are duplicates of the input object with updated annotations.\nThe ZipFile below contains output files with the following columns:\nindex: Coding Sequence ID\nPrediction: Predicted TIGRFAMS Annotation\n Score: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.\ndelta: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.\nConfidence: Approximate probability of the prediction correctness."
+        text_message = "<b>All object(s) above have been successfully annotated with TIGRFAMs using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted TIGRFAMS Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness."
         # Prepare report parameters with the zipped file
         report_params = {
             'message': text_message,
