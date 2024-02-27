@@ -538,12 +538,12 @@ This will have to be changed soon.
                 logging.info("Object saved successfully:")
                 logging.info(result)
                 
-                saved_object_info_list.append(result)
-                object_id_list.append(str(result[0]))
+                # saved_object_info_list.append(result)
+                # object_id_list.append(str(result[0]))
                 # object_id = str(result[0][0])  # Object ID
-                workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+                # workspace_id = params['workspace_id']  # Assuming this is the workspace ID
                 # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
-                workspace_ref_list.append("{}/{}".format(workspace_id, result[0]))  # Workspace reference
+                # workspace_ref_list.append("{}/{}".format(workspace_id, result[0]))  # Workspace reference
 
                 
             # logging.info(output)   
@@ -577,12 +577,12 @@ This will have to be changed soon.
             # Add the specific file to the zip archive, adjust the arcname to change its name within the archive if needed
             zipdir(target_dir, zip_file)
 
-        object_list = []
-        for workspace_ref in workspace_ref_list:
-            object_list.append({
-                    'ref': workspace_ref,
-                    'description': 'Updated protein set with new ontologies and annotations'
-                })
+        # object_list = []
+        # for workspace_ref in workspace_ref_list:
+        #     object_list.append({
+        #             'ref': workspace_ref,
+        #             'description': 'Updated protein set with new ontologies and annotations'
+        #         })
     
     
 
@@ -596,7 +596,7 @@ This will have to be changed soon.
         report_params = {
             'message': text_message,
             'workspace_name': workspace_name,
-            'objects_created': object_list,
+            # 'objects_created': object_list,
             'file_links': [
                 {
                     'path': result_file,
