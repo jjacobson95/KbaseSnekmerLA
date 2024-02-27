@@ -457,7 +457,10 @@ This will have to be changed soon.
         workspace_ref_list = []    
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         
-        for seq_obj_num, ref in enumerate(protein_input):
+        
+        full_input = protein_input + genome_input
+        
+        for seq_obj_num, ref in enumerate(full_input):
                 # Fetch the object for the current reference
                 protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
                 object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
