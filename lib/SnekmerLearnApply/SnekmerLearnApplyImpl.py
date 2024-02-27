@@ -450,10 +450,13 @@ This will have to be changed soon.
         #         }
         # sequences = protein_seq_set['data'][0]['data']['sequences']
         
-        logging.info(sequences)
+        logging.info("Check object_refs here")
+        logging.info(object_refs)
         saved_object_info_list = []
         object_id_list = []
         workspace_ref_list = []    
+        ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
+        
         for seq_obj_num, ref in enumerate(protein_input):
                 # Fetch the object for the current reference
                 protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
@@ -484,7 +487,6 @@ This will have to be changed soon.
                             }
                         })
             
-                ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
                 result = ontology_api.add_annotation_ontology_events(params={
                     "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
                     "input_workspace":params['workspace_id'],#Workspace with your input object

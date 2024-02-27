@@ -1,6 +1,6 @@
 # SnekmerLearnApply release notes
 =========================================
 
-0.0.77
+0.0.78
 -----
 * Module created by kb-sdk init
