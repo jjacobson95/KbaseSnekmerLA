@@ -88,13 +88,9 @@ This will have to be changed soon.
         if len(params['protein_input']) > 0:
             run_type.append("protein")
             protein_input = params['protein_input']
-            full_input = protein_input
         if len(params['genome_input']) > 0:
             run_type.append("genome")
             genome_input  = params['genome_input']
-            full_input = genome_input
-        if len(params['genome_input']) > 0 and len(params['protein_input']) > 0:
-            full_input = protein_input + genome_input
         object_refs = []
             
         # protein_input = params['protein_input']
@@ -401,96 +397,95 @@ This will have to be changed soon.
         workspace_ref_list = []    
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         
-        
-        
-        for seq_obj_num, ref in enumerate(full_input):
-                # Fetch the object for the current reference
-                protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
-                object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
-                sequences = protein_seq_set['data'][0]['data']['sequences']
-                
-                events = []
-                for i,item in enumerate(sequences):
-                    if item["id"] in all_predictions:
-                        prediction = all_predictions[item["id"]]["prediction"]
-                        confidence = all_predictions[item["id"]]["confidence"]
-                        index = item["id"]
-                        # ref_id = str(params['workspace_id']) + "." + str(i)
-                        # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
-                        item["ontology_terms"] = {prediction: {"term": []}}
-                        events.append({
-                            "ontology_id" : "TIGR",
-                            "description" : "TIGR annotations with Snekmer Apply",
-                            "method_version" : "1.0",
-                            "method" : "Snekmer Apply",
-                            "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
-                            "ontology_terms":{ index : [
-                                {
-                                    "term" : prediction,
-                                    "evidence" : {"scores":{"probability":confidence}}
+        if "protein" in run_type:
+            for seq_obj_num, ref in enumerate(protein_input):
+                    # Fetch the object for the current reference
+                    protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+                    object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                    sequences = protein_seq_set['data'][0]['data']['sequences']
+                    
+                    events = []
+                    for i,item in enumerate(sequences):
+                        if item["id"] in all_predictions:
+                            prediction = all_predictions[item["id"]]["prediction"]
+                            confidence = all_predictions[item["id"]]["confidence"]
+                            index = item["id"]
+                            # ref_id = str(params['workspace_id']) + "." + str(i)
+                            # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
+                            item["ontology_terms"] = {prediction: {"term": []}}
+                            events.append({
+                                "ontology_id" : "TIGR",
+                                "description" : "TIGR annotations with Snekmer Apply",
+                                "method_version" : "1.0",
+                                "method" : "Snekmer Apply",
+                                "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
+                                "ontology_terms":{ index : [
+                                    {
+                                        "term" : prediction,
+                                        "evidence" : {"scores":{"probability":confidence}}
+                                    }
+                                ]
                                 }
-                            ]
-                            }
+                            })
+                
+                    result = ontology_api.add_annotation_ontology_events(params={
+                        "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
+                        "input_workspace":params['workspace_id'],#Workspace with your input object
+                        "output_name":object_name,#Name to which the modified object should be saved
+                        "output_workspace":params['workspace_id'],#Workspace where output should be saved
+                        "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
+                        "overwrite_matching":1,#Overwrites annotations for matching event IDs
+                        "save":1,#Set to one to save the output object
+                        "events":events
                         })
-            
-                result = ontology_api.add_annotation_ontology_events(params={
-                    "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
-                    "input_workspace":params['workspace_id'],#Workspace with your input object
-                    "output_name":object_name,#Name to which the modified object should be saved
-                    "output_workspace":params['workspace_id'],#Workspace where output should be saved
-                    "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
-                    "overwrite_matching":1,#Overwrites annotations for matching event IDs
-                    "save":1,#Set to one to save the output object
-                    "events":events
-                    })
 
-        
-        # events = []
-        # for i,item in enumerate(sequences):
-        #     if item["id"] in all_predictions:
-        #         prediction = all_predictions[item["id"]]["prediction"]
-        #         confidence = all_predictions[item["id"]]["confidence"]
-        #         index = item["id"]
-        #         # ref_id = str(params['workspace_id']) + "." + str(i)
-        #         # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
-        #         item["ontology_terms"] = {prediction: {"term": []}}
-        #         events.append({
-        #             "ontology_id" : "TIGR",
-        #             "description" : "TIGR annotations with Snekmer Apply",
-        #             "method_version" : "1.0",
-        #             "method" : "Snekmer Apply",
-        #             "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
-        #             "ontology_terms":{ index : [
-        #                 {
-        #                     "term" : prediction,
-        #                     "evidence" : {"scores":{"probability":confidence}}
-        #                 }
-        #             ]
-        #             }
-        #         })
-        
-        # ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
-        # output = ontology_api.add_annotation_ontology_events(params={
-        #     "input_ref": object_refs[0]['ref'], #Name of your input object
-        #     "input_workspace":params['workspace_id'],#Workspace with your input object
-        #     "output_name":"New_ProteinSetObj_CH_method",#Name to which the modified object should be saved
-        #     "output_workspace":params['workspace_id'],#Workspace where output should be saved
-        #     "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
-        #     "overwrite_matching":1,#Overwrites annotations for matching event IDs
-        #     "save":1,#Set to one to save the output object
-        #     "events":events
-        #     })
-                
-                logging.info("Object saved successfully:")
-                logging.info(result)
-                
-                # saved_object_info_list.append(result['output_ref'])
-                object_id_list.append(str(result['output_ref']))
-                # object_id = str(['output_ref'])  # Object ID
-                # workspace_id = params['workspace_id']  # Assuming this is the workspace ID
-                # workspace_ref = "{}/{}".format(workspace_id, )  # Workspace reference
-                # workspace_ref_list.append("{}/{}".format(workspace_id, result['output_ref']))  # Workspace reference
-                workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
+            
+            # events = []
+            # for i,item in enumerate(sequences):
+            #     if item["id"] in all_predictions:
+            #         prediction = all_predictions[item["id"]]["prediction"]
+            #         confidence = all_predictions[item["id"]]["confidence"]
+            #         index = item["id"]
+            #         # ref_id = str(params['workspace_id']) + "." + str(i)
+            #         # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
+            #         item["ontology_terms"] = {prediction: {"term": []}}
+            #         events.append({
+            #             "ontology_id" : "TIGR",
+            #             "description" : "TIGR annotations with Snekmer Apply",
+            #             "method_version" : "1.0",
+            #             "method" : "Snekmer Apply",
+            #             "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
+            #             "ontology_terms":{ index : [
+            #                 {
+            #                     "term" : prediction,
+            #                     "evidence" : {"scores":{"probability":confidence}}
+            #                 }
+            #             ]
+            #             }
+            #         })
+            
+            # ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
+            # output = ontology_api.add_annotation_ontology_events(params={
+            #     "input_ref": object_refs[0]['ref'], #Name of your input object
+            #     "input_workspace":params['workspace_id'],#Workspace with your input object
+            #     "output_name":"New_ProteinSetObj_CH_method",#Name to which the modified object should be saved
+            #     "output_workspace":params['workspace_id'],#Workspace where output should be saved
+            #     "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
+            #     "overwrite_matching":1,#Overwrites annotations for matching event IDs
+            #     "save":1,#Set to one to save the output object
+            #     "events":events
+            #     })
+                    
+                    logging.info("Object saved successfully:")
+                    logging.info(result)
+                    
+                    # saved_object_info_list.append(result['output_ref'])
+                    object_id_list.append(str(result['output_ref']))
+                    # object_id = str(['output_ref'])  # Object ID
+                    # workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+                    # workspace_ref = "{}/{}".format(workspace_id, )  # Workspace reference
+                    # workspace_ref_list.append("{}/{}".format(workspace_id, result['output_ref']))  # Workspace reference
+                    workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
                 
             # logging.info(output)   
@@ -501,6 +496,50 @@ This will have to be changed soon.
                 # workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
         #DO NOT DELETE above Code - needs fix from chris
     
+    
+        if "genome" in run_type:
+            for seq_obj_num, ref in enumerate(genome_input):
+                    # Fetch the object for the current reference
+                    genome_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+                    object_name = genome_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                    sequences = genome_seq_set['data'][0]['data']["cdss"]['protein_translation']
+                    logging.info(object_name)
+                    logging.info(sequences)
+                    
+                    events = []
+                    for i,item in enumerate(sequences):
+                        if item["id"] in all_predictions:
+                            prediction = all_predictions[item["id"]]["prediction"]
+                            confidence = all_predictions[item["id"]]["confidence"]
+                            index = item["id"]
+                            # ref_id = str(params['workspace_id']) + "." + str(i)
+                            # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
+                            item["ontology_terms"] = {prediction: {"term": []}}
+                            events.append({
+                                "ontology_id" : "TIGR",
+                                "description" : "TIGR annotations with Snekmer Apply",
+                                "method_version" : "1.0",
+                                "method" : "Snekmer Apply",
+                                "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
+                                "ontology_terms":{ index : [
+                                    {
+                                        "term" : prediction,
+                                        "evidence" : {"scores":{"probability":confidence}}
+                                    }
+                                ]
+                                }
+                            })
+                
+                    result = ontology_api.add_annotation_ontology_events(params={
+                        "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
+                        "input_workspace":params['workspace_id'],#Workspace with your input object
+                        "output_name":object_name,#Name to which the modified object should be saved
+                        "output_workspace":params['workspace_id'],#Workspace where output should be saved
+                        "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
+                        "overwrite_matching":1,#Overwrites annotations for matching event IDs
+                        "save":1,#Set to one to save the output object
+                        "events":events
+                        })
     
     
         #duplicate
