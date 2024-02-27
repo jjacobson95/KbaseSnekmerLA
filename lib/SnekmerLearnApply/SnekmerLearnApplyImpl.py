@@ -85,10 +85,10 @@ This will have to be changed soon.
         run_type = []
         if 'protein_input' not in params and 'genome_input' not in params:
             raise ValueError('Neither protein_input nor genome_input found')
-        if len(params['protein_input'] > 0):
+        if len(params['protein_input']) > 0:
             run_type.append("protein")
             protein_input = params['protein_input']
-        if len(params['genome_input'] > 0):
+        if len(params['genome_input']) > 0:
             run_type.append("genome")
             genome_input  = params['genome_input']
             
