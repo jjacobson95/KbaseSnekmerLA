@@ -182,7 +182,7 @@ This will have to be changed soon.
                             # Iterate over each sequence
                             for seq in sequences_data:
                                 # Construct the header with sequence ID and description
-                                header = ">{} {}".format(seq['id'], seq['function'])
+                                header = ">{} {}".format(seq['id'], seq['functions'])
                                 # Write the header and sequence to the FASTA file
                                 fasta_file.write("{}\n{}\n".format(header, seq['protein_translation']))
 
