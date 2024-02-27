@@ -276,8 +276,6 @@ This will have to be changed soon.
         # logging.info(ontology_events)
 
 
-
-
         # Use the cb_annotation_ontology_api to add the ontology events
         # ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         # params = {
@@ -293,7 +291,6 @@ This will have to be changed soon.
         
         
         # New Stuff End
-
 
         #Attempt 2:
             
@@ -326,11 +323,108 @@ This will have to be changed soon.
         # }
         # protein_seq_set['ontology_events'].append(ontology_event)
 
+
+
         # THIS WORKS - Do Not REMOVE
         
+        # for file in file_paths:
+        #     with open(os.path.join(cwd, "output", "apply", file), 'r') as csvfile:
+        #         csvreader = csv.DictReader(csvfile)
+        #         all_predictions = {}
+        #         for row in csvreader:
+        #             all_predictions[row['index']] = {
+        #                 "prediction": row['Prediction'],
+        #                 "score":row['Score'],
+        #                 "delta":row['delta'],
+        #                 "confidence":row['Confidence']
+        #             }
+                    
+        # saved_object_info_list = []
+        # object_id_list = []
+        # workspace_ref_list = []
+        # if "protein" in run_type:
+            
+        #     for seq_obj_num, ref in enumerate(protein_input):
+        #         # Fetch the object for the current reference
+        #         protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+        #         sequences = protein_seq_set['data'][0]['data']['sequences']
                 
+
+        #         for i,item in enumerate(sequences):
+        #             if item["id"] in all_predictions:
+        #                 prediction = all_predictions[item["id"]]["prediction"]
+        #                 confidence = all_predictions[item["id"]]["confidence"]
+        #                 index = item["id"]
+        #             # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
+        #                 prediction = all_predictions[item["id"]]["prediction"]
+        #                 ref_id = str(params['workspace_id']) + "." + str(i)
+        #                 item["ontology_terms"] = {prediction: {"term": []}}
+                        
+        #         modified_data = protein_seq_set['data'][0]['data']
+
+        #         logging.info("New Protein Set \n\n\n")
+        #         # logging.info(modified_data)
+        #         logging.info(protein_seq_set['data'][0]['info'][1])
+
+        #         object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+        #         object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
+
+        #         # Save the modified object
+        #         save_params_mod = {
+        #             'workspace': params['workspace_name'],
+        #             'objects': [{
+        #                 'type': object_type,
+        #                 'data': modified_data,
+        #                 'name': object_name
+        #             }]
+        #         }
+
+
+        #         result = self.wsClient.save_objects(save_params_mod)
+        #         logging.info("Object saved successfully:")
+        #         logging.info(result)
                 
-                
+        #         saved_object_info_list.append(result[0])
+        #         object_id_list.append(str(result[0][0]))
+        #         # object_id = str(result[0][0])  # Object ID
+        #         workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+        #         # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
+        #         workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
+
+        # Setup output directory for the ZIP file
+        # output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
+        # os.makedirs(output_directory)
+        # run_date = datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p")
+        # result_name = "KmerSummaryOutput" + run_date + ".zip"
+        # result_file = os.path.join(output_directory, result_name)
+        
+        # def zipdir(path, ziph):
+        #     # ziph is zipfile handle
+        #     for root, dirs, files in os.walk(path):
+        #         for file in files:
+        #             # Create a relative path for files to keep the directory structure
+        #             relative_path = os.path.relpath(os.path.join(root, file), os.path.join(path, '..'))
+        #             ziph.write(os.path.join(root, file), relative_path)
+
+        # # Zip the specific output file
+        # with zipfile.ZipFile(result_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True) as zip_file:
+        #     # Add the specific file to the zip archive, adjust the arcname to change its name within the archive if needed
+        #     zipdir(target_dir, zip_file)
+
+        # object_list = []
+        # for workspace_ref in workspace_ref_list:
+        #     object_list.append({
+        #             'ref': workspace_ref,
+        #             'description': 'Updated protein set with new ontologies and annotations'
+        #         })
+        # ABOVE CODE WORKS - DO NOT REMOVE
+    
+        
+
+        #### Below code works on my side - but chris needs to fix something. "Location" Keyerror - I think this works for genome but not protein.
+        # ## Do not delete
+        
+        
         for file in file_paths:
             with open(os.path.join(cwd, "output", "apply", file), 'r') as csvfile:
                 csvreader = csv.DictReader(csvfile)
@@ -343,82 +437,7 @@ This will have to be changed soon.
                         "confidence":row['Confidence']
                     }
                     
-        # sequences = protein_seq_set['data'][0]['data']['sequences']
-        saved_object_info_list = []
-        object_id_list = []
-        workspace_ref_list = []
-        if "protein" in run_type:
-            
-            for seq_obj_num, ref in enumerate(protein_input):
-                # Fetch the object for the current reference
-                protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
-                sequences = protein_seq_set['data'][0]['data']['sequences']
-                
-            # for seq_obj_num,sequences in enumerate(protein_seq_set['data']):
-
-                for i,item in enumerate(sequences):
-                    if item["id"] in all_predictions:
-                        prediction = all_predictions[item["id"]]["prediction"]
-                        confidence = all_predictions[item["id"]]["confidence"]
-                        index = item["id"]
-                    # Assuming all_predictions[item["id"]]["prediction"] gives a string like "Ribulokinase (EC 2.7.1.16)"
-                        prediction = all_predictions[item["id"]]["prediction"]
-                        ref_id = str(params['workspace_id']) + "." + str(i)
-                        item["ontology_terms"] = {prediction: {"term": []}}
-                        
-                        
-                        # item["ontology_terms"] = {index:                       {
-                        #             "term" : prediction,
-                        #             "evidence" : {"scores":{"probability":confidence}}
-                        #         }}
-                        
-                        
-                        # "ontology_terms":{ index : [
-                        #         {
-                        #             "term" : prediction,
-                        #             "evidence" : {"scores":{"probability":confidence}}
-                        #         }
-                        
-                        
-                        
-                modified_data = protein_seq_set['data'][0]['data']
-
-
-                logging.info("New Protein Set \n\n\n")
-                # logging.info(modified_data)
-                logging.info(protein_seq_set['data'][0]['info'][1])
-
-                object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
-                object_type = 'KBaseSequences.ProteinSequenceSet-1.0'
-
-                # Save the modified object
-                save_params_mod = {
-                    'workspace': params['workspace_name'],
-                    'objects': [{
-                        'type': object_type,
-                        'data': modified_data,
-                        'name': object_name
-                    }]
-                }
-
-
-                result = self.wsClient.save_objects(save_params_mod)
-                logging.info("Object saved successfully:")
-                logging.info(result)
-                
-                saved_object_info_list.append(result[0])
-                object_id_list.append(str(result[0][0]))
-                # object_id = str(result[0][0])  # Object ID
-                workspace_id = params['workspace_id']  # Assuming this is the workspace ID
-                # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
-                workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
-
-        # ABOVE CODE WORKS - DO NOT REMOVE
-    
-        
-    
-        #### Below code works on my side - but chris needs to fix something. "Location" Keyerror - I think this works for genome but not protein.
-        # ## Do not delete
+      
         # with open(specific_file_path, 'r') as csvfile:
         #     csvreader = csv.DictReader(csvfile)
         #     all_predictions = {}
@@ -431,7 +450,52 @@ This will have to be changed soon.
         #         }
         # sequences = protein_seq_set['data'][0]['data']['sequences']
         
-        # logging.info(sequences)
+        logging.info(sequences)
+        saved_object_info_list = []
+        object_id_list = []
+        workspace_ref_list = []    
+        for seq_obj_num, ref in enumerate(protein_input):
+                # Fetch the object for the current reference
+                protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+                object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                sequences = protein_seq_set['data'][0]['data']['sequences']
+                
+                events = []
+                for i,item in enumerate(sequences):
+                    if item["id"] in all_predictions:
+                        prediction = all_predictions[item["id"]]["prediction"]
+                        confidence = all_predictions[item["id"]]["confidence"]
+                        index = item["id"]
+                        # ref_id = str(params['workspace_id']) + "." + str(i)
+                        # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
+                        item["ontology_terms"] = {prediction: {"term": []}}
+                        events.append({
+                            "ontology_id" : "TIGR",
+                            "description" : "TIGR annotations with Snekmer Apply",
+                            "method_version" : "1.0",
+                            "method" : "Snekmer Apply",
+                            "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
+                            "ontology_terms":{ index : [
+                                {
+                                    "term" : prediction,
+                                    "evidence" : {"scores":{"probability":confidence}}
+                                }
+                            ]
+                            }
+                        })
+            
+                ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
+                result = ontology_api.add_annotation_ontology_events(params={
+                    "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
+                    "input_workspace":params['workspace_id'],#Workspace with your input object
+                    "output_name":object_name,#Name to which the modified object should be saved
+                    "output_workspace":params['workspace_id'],#Workspace where output should be saved
+                    "clear_existing":0,#Set to 1 to clear existing annotations (don’t do this)
+                    "overwrite_matching":1,#Overwrites annotations for matching event IDs
+                    "save":1,#Set to one to save the output object
+                    "events":events
+                    })
+
         
         # events = []
         # for i,item in enumerate(sequences):
@@ -469,16 +533,28 @@ This will have to be changed soon.
         #     "events":events
         #     })
                 
-             
-        # logging.info(output)   
-        # logging.info(output[0])
-        # saved_object_info = output[0]
-        # object_id = str(saved_object_info[0])
-        # workspace_ref = "{}/{}".format(params['workspace_id'], object_id)  # Workspace reference
-        
+                logging.info("Object saved successfully:")
+                # logging.info(result)
+                
+                saved_object_info_list.append(result[0])
+                object_id_list.append(str(result[0][0]))
+                # object_id = str(result[0][0])  # Object ID
+                workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+                # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
+                workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
+
+                
+            # logging.info(output)   
+            # logging.info(output[0])
+                # saved_object_info = output[0]
+                # object_id = str(saved_object_info[0])
+                # workspace_ref = "{}/{}".format(params['workspace_id'], object_id)  # Workspace reference
+                # workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
         #DO NOT DELETE above Code - needs fix from chris
     
     
+    
+        #duplicate
         # Setup output directory for the ZIP file
         output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
         os.makedirs(output_directory)
@@ -505,14 +581,15 @@ This will have to be changed soon.
                     'ref': workspace_ref,
                     'description': 'Updated protein set with new ontologies and annotations'
                 })
-
+    
+    
 
         # TO DO -- To me...
-        # Current issue is only 1 output is being generated Add log statements to print workspace_ref_list, object_list,saved_object_info_list,object_id_list
+        #UPDATE GENOME PORTION TO REFLECT PROTEIN SECTION
+        
+        
 
-        # Idk why only 1 is generated. MAybe overwrite?
-
-
+        text_message = "hi, files finished"
         # Prepare report parameters with the zipped file
         report_params = {
             'message': text_message,
