@@ -171,8 +171,8 @@ This will have to be changed soon.
     
             for index, ref in enumerate(genome_input):
                     # Fetch the object for the current reference
-                    genome_seq_set = self.wsClient.get_objects2({'objects': [ref]})
-                    
+                    genome_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
+
                     # Generate a unique output file name for the current input
                     fasta_index += 1
                     output_file_name = "output_" + str(fasta_index) + ".fasta"
@@ -487,9 +487,10 @@ This will have to be changed soon.
                 # saved_object_info_list.append(result['output_ref'])
                 object_id_list.append(str(result['output_ref']))
                 # object_id = str(['output_ref'])  # Object ID
-                workspace_id = params['workspace_id']  # Assuming this is the workspace ID
+                # workspace_id = params['workspace_id']  # Assuming this is the workspace ID
                 # workspace_ref = "{}/{}".format(workspace_id, )  # Workspace reference
-                workspace_ref_list.append("{}/{}".format(workspace_id, result['output_ref']))  # Workspace reference
+                # workspace_ref_list.append("{}/{}".format(workspace_id, result['output_ref']))  # Workspace reference
+                workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
                 
             # logging.info(output)   
