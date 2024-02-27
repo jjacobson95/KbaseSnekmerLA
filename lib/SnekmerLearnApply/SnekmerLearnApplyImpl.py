@@ -88,9 +88,14 @@ This will have to be changed soon.
         if len(params['protein_input']) > 0:
             run_type.append("protein")
             protein_input = params['protein_input']
+            full_input = protein_input
         if len(params['genome_input']) > 0:
             run_type.append("genome")
             genome_input  = params['genome_input']
+            full_input = genome_input
+        if len(params['genome_input']) > 0 and len(params['protein_input']) > 0:
+            full_input = protein_input + genome_input
+        object_refs = []
             
         # protein_input = params['protein_input']
         # genome_input  = params['genome_input']
@@ -101,36 +106,21 @@ This will have to be changed soon.
         
         fasta_index = 0
         if "protein" in run_type:
-            object_refs = [{'ref': ref} for ref in protein_input]
+            object_refs.extend([{'ref': ref} for ref in protein_input])
             # Fetch the objects using get_objects2
-            protein_seq_set = self.wsClient.get_objects2({'objects': object_refs})
+            # protein_seq_set = self.wsClient.get_objects2({'objects': prot_object_refs})
             text_message = '\n'.join(params['protein_input'])
             
-            logging.info(object_refs)
+            # logging.info(prot_object_refs)
             # logging.info(protein_seq_set)
             logging.info(sys.version)
             # logging.info(protein_seq_set)
         
             output_dir = "input"
-            # output_file_name = "output1.fasta"
-            # output_file_path = os.path.join(output_dir, output_file_name)
 
             # Ensure the output directory exists
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-        
-            #old working version for concat all into 1
-            # with open(output_file_path, 'w') as fasta_file:
-            #     # Iterate over each fetched object in the response
-            #     for obj in protein_seq_set['data']:
-            #         # Extract sequences data for each object
-            #         sequences_data = obj['data']['sequences']
-            #         # Iterate over each sequence
-            #         for seq in sequences_data:
-            #             # Construct the header with sequence ID and description
-            #             header = ">{} {}".format(seq['id'], seq['description'])
-            #             # Write the header and sequence to the FASTA file
-            #             fasta_file.write("{}\n{}\n".format(header, seq['sequence']))
             
             for index, ref in enumerate(protein_input):
                 # Fetch the object for the current reference
@@ -167,22 +157,18 @@ This will have to be changed soon.
         ### 
         
         if "genome" in run_type:
-            # object_refs = [{'ref': ref} for ref in genome_input]
+            object_refs.extend([{'ref': ref} for ref in genome_input])
+            # genome_object_refs = [{'ref': ref} for ref in genome_input]
+            # Fetch the objects using get_objects2
+            # genome_seq_set = self.wsClient.get_objects2({'objects': genome_object_refs})
             
-            # logging.info(object_refs)
-            # # logging.info(protein_seq_set)
-            # logging.info(sys.version)
-            # logging.info(protein_seq_set)
             text_message = '\n'.join(params['genome_input'])
             output_dir = "input"
-            # output_file_name = "output1.fasta"
-            # output_file_path = os.path.join(output_dir, output_file_name)
 
             # Ensure the output directory exists
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-        
-        
+    
             for index, ref in enumerate(genome_input):
                     # Fetch the object for the current reference
                     genome_seq_set = self.wsClient.get_objects2({'objects': [ref]})
@@ -292,36 +278,6 @@ This will have to be changed soon.
         
         # New Stuff End
 
-        #Attempt 2:
-            
-        # def generate_event_id():
-        #     return "event_" + datetime.now().strftime("%Y%m%d%H%M%S")
-
-        # # Read predictions and update ProteinSequence objects
-        # with open(specific_file_path, 'r') as csvfile:
-        #     csvreader = csv.DictReader(csvfile)
-        #     for row in csvreader:
-        #         # Find the matching ProteinSequence by 'id'
-        #         for protein_sequence in protein_seq_set['sequences']:
-        #             if protein_sequence['id'] == row['id']:  # Assuming 'id' column matches
-        #                 # Update the ontology_terms for this ProteinSequence
-        #                 ontology_term = row['Prediction']  # Assuming 'Prediction' column contains the ontology term
-        #                 if ontology_term not in protein_sequence['ontology_terms']:
-        #                     protein_sequence['ontology_terms'][ontology_term] = []
-        #                 # Append an event index to the list for this term
-        #                 # Here, you might need to adapt this based on how you handle ontology_events
-        #                 protein_sequence['ontology_terms'][ontology_term].append(generate_event_id())
-
-        # # Optionally, add a generic ontology event to the ontology_events list if needed
-        # ontology_event = {
-        #     "id": generate_event_id(),
-        #     "ontology_ref": "your_ontology_ref",  # Replace with actual reference
-        #     "method": "SnekmerLearnApply_annotation",
-        #     "method_version": "1.0",
-        #     "timestamp": datetime.now().isoformat(),
-        #     "description": "Protein annotation based on SnekmerLearnApply predictions"
-        # }
-        # protein_seq_set['ontology_events'].append(ontology_event)
 
 
 
@@ -436,19 +392,7 @@ This will have to be changed soon.
                         "delta":row['delta'],
                         "confidence":row['Confidence']
                     }
-                    
-      
-        # with open(specific_file_path, 'r') as csvfile:
-        #     csvreader = csv.DictReader(csvfile)
-        #     all_predictions = {}
-        #     for row in csvreader:
-        #         all_predictions[row['index']] = {
-        #             "prediction": row['Prediction'],
-        #             "score":row['Score'],
-        #             "delta":row['delta'],
-        #             "confidence":row['Confidence']
-        #         }
-        # sequences = protein_seq_set['data'][0]['data']['sequences']
+                
         
         logging.info("Check object_refs here")
         logging.info(object_refs)
@@ -458,7 +402,6 @@ This will have to be changed soon.
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         
         
-        full_input = protein_input + genome_input
         
         for seq_obj_num, ref in enumerate(full_input):
                 # Fetch the object for the current reference
