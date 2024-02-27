@@ -271,7 +271,8 @@ This will have to be changed soon.
                     object_id_list.append(str(result['output_ref']))
                     workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
-    
+
+        ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         if "genome" in run_type:
             for seq_obj_num, ref in enumerate(genome_input):
                     # Fetch the object for the current reference
