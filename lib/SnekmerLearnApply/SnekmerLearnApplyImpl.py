@@ -536,14 +536,14 @@ This will have to be changed soon.
         #     })
                 
                 logging.info("Object saved successfully:")
-                # logging.info(result)
+                logging.info(result)
                 
-                saved_object_info_list.append(result[0])
-                object_id_list.append(str(result[0][0]))
+                saved_object_info_list.append(result)
+                object_id_list.append(str(result[0]))
                 # object_id = str(result[0][0])  # Object ID
                 workspace_id = params['workspace_id']  # Assuming this is the workspace ID
                 # workspace_ref = "{}/{}".format(workspace_id, result[0][0])  # Workspace reference
-                workspace_ref_list.append("{}/{}".format(workspace_id, result[0][0]))  # Workspace reference
+                workspace_ref_list.append("{}/{}".format(workspace_id, result[0]))  # Workspace reference
 
                 
             # logging.info(output)   
