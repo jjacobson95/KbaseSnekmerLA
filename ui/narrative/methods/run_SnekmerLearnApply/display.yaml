@@ -27,6 +27,10 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
+        ui-name: |
+            Input Type
+        short-hint: |
+            Select the type of input: either a Protein Sequence Set or a Genome.
     protein_input :
         ui-name : |
             ProteinSetSequence Object
