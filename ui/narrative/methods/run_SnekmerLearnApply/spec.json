@@ -16,6 +16,8 @@
             "advanced": false,
             "allow_multiple": false,
             "default_values": ["protein"],
+            "ui_name": "Input Type",
+            "short_hint": "Select the type of input: either a Protein Sequence Set or a Genome.",
             "field_type": "dropdown",
             "dropdown_options": {
                 "options": [
@@ -26,6 +28,24 @@
                     {
                         "value": "genome",
                         "display": "Genome"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "family",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": ["TIGRFams"],
+            "field_type": "dropdown",
+            "ui_name": "Annotation Family",
+            "short_hint": "Select the type of annotation family you wish to annotate the object with.",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "TIGRFams",
+                        "display": "TIGRFams"
                     }
                 ]
             }
@@ -77,7 +97,15 @@
                     "input_parameter": "genome_input",
                     "target_property": "genome_input",
                     "target_type_transform": "resolved-ref"
-                }         
+                },{
+                    "input_parameter": "input_type",
+                    "target_property": "input_type",
+                    "target_type_transform": "resolved-ref"
+                },{
+                    "input_parameter": "family",
+                    "target_property": "family",
+                    "target_type_transform": "resolved-ref"
+                }    
                 ],
             "output_mapping": [
                 {

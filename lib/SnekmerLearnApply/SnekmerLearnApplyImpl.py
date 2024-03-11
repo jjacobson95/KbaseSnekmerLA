@@ -70,12 +70,13 @@ This will have to be changed soon.
         # return variables are: output
         #BEGIN run_SnekmerLearnApply
 
-        logging.info('Starting run_Snekmer_search function. Params=' + pformat(params))
+        logging.info('Starting Snekmer Apply function. Params=' + pformat(params))
         logging.info('Validating parameters.')
 
         # check inputs
         workspace_name = params['workspace_name']
         run_type = []
+        
         if 'protein_input' not in params and 'genome_input' not in params:
             raise ValueError('Neither protein_input nor genome_input found')
         if len(params['protein_input']) > 0:
@@ -88,7 +89,7 @@ This will have to be changed soon.
             
         
         fasta_index = 0
-        if "protein" in run_type:
+        if "protein" in run_type and "protein" == params["input_type"]:
             object_refs.extend([{'ref': ref} for ref in protein_input])
             text_message = '\n'.join(params['protein_input'])
 
@@ -129,7 +130,7 @@ This will have to be changed soon.
                 logging.info("Description: {}".format(seq_record.description))
                 logging.info("Sequence: {}\n".format(str(seq_record.seq)[:40]))
         
-        if "genome" in run_type:
+        if "genome" in run_type and "genome" == params["input_type"]:
             object_refs.extend([{'ref': ref} for ref in genome_input])
             
             text_message = '\n'.join(params['genome_input'])
@@ -222,7 +223,7 @@ This will have to be changed soon.
         workspace_ref_list = []    
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         
-        if "protein" in run_type:
+        if "protein" in run_type and "protein" == params["input_type"]:
             for seq_obj_num, ref in enumerate(protein_input):
                     # Fetch the object for the current reference
                     protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
@@ -271,7 +272,7 @@ This will have to be changed soon.
                     object_id_list.append(str(result['output_ref']))
                     workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
-        if "genome" in run_type:
+        if "genome" in run_type and "genome" == params["input_type"]:
             for seq_obj_num, ref in enumerate(genome_input):
                     # Fetch the object for the current reference
                     genome_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})

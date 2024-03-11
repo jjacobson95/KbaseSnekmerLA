@@ -32,6 +32,11 @@ parameters :
             Input Type
         short-hint : |
             Select the type of input: either a Protein Sequence Set or a Genome.
+    family:
+        ui-name : |
+            Annotation Family
+        short-hint : |
+            Select the type of annotation family you wish to annotate the object with.
     protein_input :
         ui-name : |
             ProteinSetSequence Object
