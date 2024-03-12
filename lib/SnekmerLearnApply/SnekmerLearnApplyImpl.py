@@ -180,11 +180,15 @@ This will have to be changed soon.
         logging.info(cwd_contents)
         
         if params["family"] in ["TIGRFams", "Pfam", "PANTHER"]:
-            source_confidence = "data/{0}--global-confidence-scores.csv".format(params["family"])
-            destination_confidence = "confidence/{0}--global-confidence-scores.csv".format(params["family"])
-            source_counts = "data/{0}--kmer-counts-total.csv".format(params["family"])
-            destination_counts = "counts/{0}--kmer-counts-total.csv".format(params["family"])
+            source_confidence = "data/{0}-global-confidence-scores.csv".format(params["family"])
+            destination_confidence = "confidence/{0}-global-confidence-scores.csv".format(params["family"])
+            source_counts = "data/{0}-kmer-counts-total.csv".format(params["family"])
+            destination_counts = "counts/{0}-kmer-counts-total.csv".format(params["family"])
 
+        # Make dirs if not present
+        os.makedirs(os.path.dirname(destination_confidence), exist_ok=True)
+        os.makedirs(os.path.dirname(destination_counts), exist_ok=True)
+        
         # Move global confidence scores file
         if os.path.exists(source_confidence):
             os.rename(source_confidence, destination_confidence)
