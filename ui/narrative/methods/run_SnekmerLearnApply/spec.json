@@ -99,12 +99,10 @@
                     "target_type_transform": "resolved-ref"
                 },{
                     "input_parameter": "input_type",
-                    "target_property": "input_type",
-                    "target_type_transform": "resolved-ref"
+                    "target_property": "input_type"
                 },{
                     "input_parameter": "family",
-                    "target_property": "family",
-                    "target_type_transform": "resolved-ref"
+                    "target_property": "family"
                 }    
                 ],
             "output_mapping": [
