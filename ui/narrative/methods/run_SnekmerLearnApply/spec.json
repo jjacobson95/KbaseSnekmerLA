@@ -23,7 +23,7 @@
                 "options": [
                     {
                         "value": "protein",
-                        "display": "Protein Sequence Set"
+                        "display": "ProteinSequenceSet"
                     },
                     {
                         "value": "genome",
@@ -46,6 +46,14 @@
                     {
                         "value": "TIGRFams",
                         "display": "TIGRFams"
+                    },
+                    {
+                        "value": "Pfam",
+                        "display": "Pfam"
+                    },
+                    {
+                        "value": "PANTHER",
+                        "display": "PANTHER"
                     }
                 ]
             }

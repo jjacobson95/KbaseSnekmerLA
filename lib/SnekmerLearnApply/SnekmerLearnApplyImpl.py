@@ -179,6 +179,19 @@ This will have to be changed soon.
         logging.info(os.getcwd())
         logging.info(cwd_contents)
         
+        if params["family"] in ["TIGRFams", "Pfam", "PANTHER"]:
+            source_confidence = "data/{0}--global-confidence-scores.csv".format(params["family"])
+            destination_confidence = "confidence/{0}--global-confidence-scores.csv".format(params["family"])
+            source_counts = "data/{0}--kmer-counts-total.csv".format(params["family"])
+            destination_counts = "counts/{0}--kmer-counts-total.csv".format(params["family"])
+
+        # Move global confidence scores file
+        if os.path.exists(source_confidence):
+            os.rename(source_confidence, destination_confidence)
+        
+        # Move kmer counts total file
+        if os.path.exists(source_counts):
+            os.rename(source_counts, destination_counts)
         
         cmd_string = "snekmer apply --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
@@ -223,6 +236,13 @@ This will have to be changed soon.
         workspace_ref_list = []    
         ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
         
+        
+        
+        fam_map = {"TIGRFams": "TIGR", "Pfam": "PF", "PANTHER":"PTHR"}
+        family_type = params["family"]
+        ontology_id = fam_map.get(family_type)
+        description_prefix = family_type + " annotations with Snekmer Apply"
+
         if "protein" in run_type and "protein" == params["input_type"]:
             for seq_obj_num, ref in enumerate(protein_input):
                     # Fetch the object for the current reference
@@ -240,8 +260,8 @@ This will have to be changed soon.
                             # item["ontology_terms"] = {ref_id: {"term": [prediction]}}
                             item["ontology_terms"] = {prediction: {"term": []}}
                             events.append({
-                                "ontology_id" : "TIGR",
-                                "description" : "TIGR annotations with Snekmer Apply",
+                                "ontology_id" : ontology_id,
+                                "description" : description_prefix,
                                 "method_version" : "1.0",
                                 "method" : "Snekmer Apply",
                                 "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
