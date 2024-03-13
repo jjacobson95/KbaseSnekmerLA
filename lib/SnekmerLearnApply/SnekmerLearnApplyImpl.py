@@ -325,7 +325,7 @@ This will have to be changed soon.
                     ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
                     # Fetch the object for the current reference
                     genome_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
-                    object_name = genome_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                    object_name = genome_seq_set['data'][0]['info'][1] + "_Snekmer_LA_" + family_type
                     sequences = genome_seq_set['data'][0]['data']["cdss"]
                     logging.info(object_name)
                     logging.info(sequences)
