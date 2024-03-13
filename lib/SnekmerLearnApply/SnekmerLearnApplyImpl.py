@@ -265,7 +265,7 @@ This will have to be changed soon.
             for seq_obj_num, ref in enumerate(protein_input):
                     # Fetch the object for the current reference
                     protein_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
-                    object_name = protein_seq_set['data'][0]['info'][1] + "_Annotated_with_Snekmer_Apply"
+                    object_name = protein_seq_set['data'][0]['info'][1] + "_Snekmer_LA_" + family_type
                     sequences = protein_seq_set['data'][0]['data']['sequences']
                     
                     events = []
