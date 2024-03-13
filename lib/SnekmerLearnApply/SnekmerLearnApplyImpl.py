@@ -11,6 +11,8 @@ import zipfile
 import uuid
 from datetime import datetime
 import csv
+import gzip
+import shutil
 
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
@@ -179,24 +181,36 @@ This will have to be changed soon.
         logging.info(os.getcwd())
         logging.info(cwd_contents)
         
+        
+
+        def decompress_and_move(source_path, destination_path):
+            # Adjust the destination path to have the correct filename (remove .gz)
+            destination_path_unzipped = destination_path.rstrip('.gz')
+            
+            # Decompress the .gz file and write the contents to the new location
+            with gzip.open(source_path, 'rb') as f_in:
+                with open(destination_path_unzipped, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+
         if params["family"] in ["TIGRFams", "Pfam", "PANTHER"]:
-            source_confidence = "data/{0}-global-confidence-scores.csv".format(params["family"])
+            source_confidence = "data/{0}-global-confidence-scores.csv.gz".format(params["family"])
             destination_confidence = "confidence/{0}-global-confidence-scores.csv".format(params["family"])
-            source_counts = "data/{0}-kmer-counts-total.csv".format(params["family"])
+            source_counts = "data/{0}-kmer-counts-total.csv.gz".format(params["family"])
             destination_counts = "counts/{0}-kmer-counts-total.csv".format(params["family"])
 
         # Make dirs if not present
         os.makedirs(os.path.dirname(destination_confidence))
         os.makedirs(os.path.dirname(destination_counts))
-        
-        # Move global confidence scores file
+            
         if os.path.exists(source_confidence):
-            os.rename(source_confidence, destination_confidence)
+            decompress_and_move(source_confidence, destination_confidence)
         
-        # Move kmer counts total file
+        # Decompress and move kmer counts total file
         if os.path.exists(source_counts):
-            os.rename(source_counts, destination_counts)
-        
+            decompress_and_move(source_counts, destination_counts)
+                     
+                
+                
         cmd_string = "snekmer apply --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT, cwd=os.getcwd(),
