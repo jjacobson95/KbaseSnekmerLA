@@ -296,6 +296,13 @@ This will have to be changed soon.
                     object_id_list.append(str(result['output_ref']))
                     workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
+
+        
+        fam_map = {"TIGRFams": "TIGR", "Pfam": "PF", "PANTHER":"PTHR"}
+        family_type = params["family"]
+        ontology_id = fam_map.get(family_type)
+        description_prefix = family_type + " annotations with Snekmer Apply"
+
         if "genome" in run_type and "genome" == params["input_type"]:
             for seq_obj_num, ref in enumerate(genome_input):
                     # Fetch the object for the current reference
@@ -313,8 +320,8 @@ This will have to be changed soon.
                             index = item["id"]
                             item["ontology_terms"] = {prediction: {"term": []}}
                             events.append({
-                                "ontology_id" : "TIGR",
-                                "description" : "TIGR annotations with Snekmer Apply",
+                                "ontology_id" : ontology_id,
+                                "description" : description_prefix,
                                 "method_version" : "1.0",
                                 "method" : "Snekmer Apply",
                                 "timestamp" : datetime.now().strftime("%Y.%m.%d-%I:%M:%S%p"),
@@ -370,8 +377,9 @@ This will have to be changed soon.
                     'description': 'Updated object with new ontologies and annotations'
                 })
     
-    
-        text_message = "<b>All object(s) above have been successfully annotated with TIGRFAMs using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted TIGRFAMS Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness."
+        text_message = "<b>All object(s) above have been successfully annotated with {0} using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted {0} Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness.".format(params["family"])
+        # text_message = "<b>All object(s) above have been successfully annotated with TIGRFAMs using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted TIGRFAMS Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness."
+        
         # Prepare report parameters with the zipped file
         report_params = {
             'message': text_message,
