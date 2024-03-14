@@ -295,7 +295,7 @@ This will have to be changed soon.
                             })
                 
                     result = ontology_api.add_annotation_ontology_events(params={
-                        "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
+                        "input_ref": ref, #Name of your input object
                         "input_workspace":params['workspace_id'],#Workspace with your input object
                         "output_name":object_name,#Name to which the modified object should be saved
                         "output_workspace":params['workspace_id'],#Workspace where output should be saved
@@ -353,7 +353,7 @@ This will have to be changed soon.
                             })
                 
                     result = ontology_api.add_annotation_ontology_events(params={
-                        "input_ref": object_refs[seq_obj_num]['ref'], #Name of your input object
+                        "input_ref": ref, #Name of your input object
                         "input_workspace":params['workspace_id'],#Workspace with your input object
                         "output_name":object_name,#Name to which the modified object should be saved
                         "output_workspace":params['workspace_id'],#Workspace where output should be saved
