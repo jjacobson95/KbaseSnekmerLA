@@ -319,7 +319,8 @@ This will have to be changed soon.
         ontology_id = fam_map.get(family_type)
         description_prefix = family_type + " annotations with Snekmer Apply"
 
-        logging.info("genome_input: " + genome_input)
+        logging.info("genome_input: ")
+        logging.info(genome_input)
         if "genome" in run_type and "genome" == params["input_type"]:
             for seq_obj_num, ref in enumerate(genome_input):
                     logging.info("Genome ref (from iterating through line 323 for loop): " + ref)
@@ -329,7 +330,8 @@ This will have to be changed soon.
                     genome_seq_set = self.wsClient.get_objects2({'objects': [{"ref": ref}]})
                     object_name = genome_seq_set['data'][0]['info'][1] + "_Snekmer_LA_" + family_type
                     sequences = genome_seq_set['data'][0]['data']["cdss"]
-                    logging.info("object_name: " +  object_name)
+                    logging.info("object_name: ")
+                    logging.info(object_name)
                     # logging.info(sequences)
                     
                     events = []
