@@ -66,7 +66,31 @@ This will have to be changed soon.
 
     def run_SnekmerLearnApply(self, ctx, params):
         """
-        run_Snekmer_model accepts some of the model params for now, and returns results in a KBaseReport
+        Executes the Snekmer Apply function, which is designed to annotate biological sequences with ontology terms (TIGRFams, Pfam, PANTHER)
+        based on their k-mer profiles. The method supports processing both protein and genome inputs. It performs several key operations:
+        
+        1. Validates input parameters to ensure the presence of either protein or genome inputs.
+        2. Dynamically constructs object references based on the input type and fetches corresponding sequence data from a workspace.
+        3. Writes the fetched sequences to FASTA files, which are then used as input for the Snekmer application.
+        4. Decompresses necessary reference files for Snekmer analysis based on the specified family (TIGRFams, Pfam, PANTHER).
+        5. Executes the Snekmer application to generate k-mer based annotations for the input sequences.
+        6. Parses the Snekmer output to annotate the original sequence objects with the new ontology terms.
+        7. Packages the Snekmer output files into a ZIP archive for easy download.
+        8. Generates a detailed report through the KBaseReport service, summarizing the annotation results and providing links to the output files.
+        
+        Parameters:
+            ctx (dict): A context object containing information about the runtime environment, including user authentication.
+            params (dict): A dictionary containing method input parameters. Expected keys include:
+                - workspace_name: Name of the workspace where the output will be saved.
+                - protein_input or genome_input: Lists of object references to protein or genome data.
+                - input_type: A string indicating the type of input ('protein' or 'genome').
+                - family: The ontology family to use for annotation (e.g., 'TIGRFams', 'Pfam', 'PANTHER').
+        
+        Returns:
+            dict: A dictionary with keys 'report_name' and 'report_ref', referring to the name and reference of the generated report.
+        
+        Raises:
+            ValueError: If neither protein_input nor genome_input are provided in the params, or if other expected parameters are missing.
         """
         # ctx is the context object
         # return variables are: output
@@ -79,8 +103,27 @@ This will have to be changed soon.
         workspace_name = params['workspace_name']
         run_type = []
         
+        # Check for the presence of input keys
         if 'protein_input' not in params and 'genome_input' not in params:
-            raise ValueError('Neither protein_input nor genome_input found')
+            raise ValueError('Neither protein_input nor genome_input found in parameters.')
+
+        # Validate that inputs match the specified input_type
+        if 'input_type' not in params:
+            raise ValueError("Input type not specified. Please include 'input_type' with value 'protein' or 'genome'.")
+
+        input_type = params['input_type']
+        if input_type not in ['protein', 'genome']:
+            raise ValueError("Invalid 'input_type' specified. It must be either 'protein' or 'genome'.")
+
+        if input_type == 'protein':
+            if 'protein_input' not in params or not params['protein_input']:
+                # protein_input must not be empty if input_type is protein
+                raise ValueError("'protein_input' is required and cannot be empty when 'input_type' is 'protein'.")
+        elif input_type == 'genome':
+            if 'genome_input' not in params or not params['genome_input']:
+                # genome_input must not be empty if input_type is genome
+                raise ValueError("'genome_input' is required and cannot be empty when 'input_type' is 'genome'.")
+
         if len(params['protein_input']) > 0:
             run_type.append("protein")
             protein_input = params['protein_input']
@@ -90,6 +133,7 @@ This will have to be changed soon.
         object_refs = []
             
         
+        # Here we constuct a fasta file from a Protein Sequence Set Object
         fasta_index = 0
         if "protein" in run_type and "protein" == params["input_type"]:
             object_refs.extend([{'ref': ref} for ref in protein_input])
@@ -132,6 +176,8 @@ This will have to be changed soon.
                 logging.info("Description: {}".format(seq_record.description))
                 logging.info("Sequence: {}\n".format(str(seq_record.seq)[:40]))
         
+        
+        # Here we constuct a fasta file from a Genome Object
         if "genome" in run_type and "genome" == params["input_type"]:
             object_refs.extend([{'ref': ref} for ref in genome_input])
             
@@ -174,15 +220,13 @@ This will have to be changed soon.
                 logging.info("Sequence: {}\n".format(str(seq_record.seq)[:40]))
             
         
-        # Run Snekmer 
+        # Here we Prepare Snekmer Apply based on the selected Family Type.
         cwd = os.getcwd()
         cwd_contents = os.listdir(cwd)
         
         logging.info(os.getcwd())
         logging.info(cwd_contents)
         
-        
-
         def decompress_and_move(source_path, destination_path):
             # Adjust the destination path to have the correct filename (remove .gz)
             destination_path_unzipped = destination_path.rstrip('.gz')
@@ -210,7 +254,7 @@ This will have to be changed soon.
             decompress_and_move(source_counts, destination_counts)
                      
                 
-                
+        # Here we run Snekmer Apply on the newly Generated Fasta File
         cmd_string = "snekmer apply --cores=4"
         cmd_process = subprocess.Popen(cmd_string, stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT, cwd=os.getcwd(),
@@ -228,17 +272,15 @@ This will have to be changed soon.
         apply_dir_path = os.path.join(cwd, "output", "apply")
         logging.info(os.listdir(apply_dir_path))
     
-        # specific_file_path = os.path.join(cwd, "output", "apply", "kmer-summary-output1.csv")
         target_dir = os.path.join(cwd, "output", "apply")
         file_paths = [f for f in os.listdir(target_dir) if os.path.isfile(os.path.join(target_dir, f))]
         
         logging.info(file_paths)
 
-
+        all_predictions = {}
         for file in file_paths:
             with open(os.path.join(cwd, "output", "apply", file), 'r') as csvfile:
                 csvreader = csv.DictReader(csvfile)
-                all_predictions = {}
                 for row in csvreader:
                     all_predictions[row['index']] = {
                         "prediction": row['Prediction'],
@@ -248,19 +290,17 @@ This will have to be changed soon.
                     }
                 
         
+        # Prepare for returning Object
         logging.info("Check object_refs here")
         logging.info(object_refs)
         object_id_list = []
-        workspace_ref_list = []    
-        # ontology_api = cb_annotation_ontology_api(url=self.callback_url, token=os.environ.get('KB_AUTH_TOKEN'))
-        
-        
-        
+        workspace_ref_list = []            
         fam_map = {"TIGRFams": "TIGR", "Pfam": "PF", "PANTHER":"PTHR"}
         family_type = params["family"]
         ontology_id = fam_map.get(family_type)
         description_prefix = family_type + " annotations with Snekmer Apply"
 
+        # Here we return the results to a Protein Sequence Set Object
         if "protein" in run_type and "protein" == params["input_type"]:
             for seq_obj_num, ref in enumerate(protein_input):
                     ontology_api = None
@@ -312,15 +352,7 @@ This will have to be changed soon.
                     object_id_list.append(str(result['output_ref']))
                     workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
-
-        
-        fam_map = {"TIGRFams": "TIGR", "Pfam": "PF", "PANTHER":"PTHR"}
-        family_type = params["family"]
-        ontology_id = fam_map.get(family_type)
-        description_prefix = family_type + " annotations with Snekmer Apply"
-
-        logging.info("genome_input: ")
-        logging.info(genome_input)
+        # Here we return the results to a Genome Object
         if "genome" in run_type and "genome" == params["input_type"]:
             for seq_obj_num, ref in enumerate(genome_input):
                     logging.info("Genome ref (from iterating through line 323 for loop): " + ref)
@@ -372,6 +404,7 @@ This will have to be changed soon.
                     object_id_list.append(str(result['output_ref']))
                     workspace_ref_list.append(str(result['output_ref']))  # Workspace reference
 
+
         # Setup output directory for the ZIP file
         output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
         os.makedirs(output_directory)
@@ -402,7 +435,7 @@ This will have to be changed soon.
         text_message = "<b>All object(s) above have been successfully annotated with {0} using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted {0} Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness.".format(params["family"])
         # text_message = "<b>All object(s) above have been successfully annotated with TIGRFAMs using Snekmer Apply.</b><br><br>The Zipfile below contains output files with the following columns:<br><b>Index</b>: Coding Sequence ID<br><b>Prediction</b>: Predicted TIGRFAMS Annotation<br><b>Score</b>: Cosine Similarity Score between coding sequence and nearest annotation in the Kmer-Association Matrix.<br><b>Delta</b>: Difference between the top two cosine similarity scores. A greater difference indicates a higher resolution and confidence.<br><b>Confidence</b>: Approximate probability of the prediction correctness."
         
-        # Prepare report parameters with the zipped file
+        # Prepare the Report Parameters
         report_params = {
             'message': text_message,
             'workspace_name': workspace_name,
@@ -427,11 +460,6 @@ This will have to be changed soon.
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
         }
-
-        # Log the details for debugging
-        logging.info("Zipped file directory: " + output_directory)
-        logging.info("=" * 80)
-        logging.info("Zipped result file: " + result_file)
 
 
         #END run_SnekmerLearnApply
