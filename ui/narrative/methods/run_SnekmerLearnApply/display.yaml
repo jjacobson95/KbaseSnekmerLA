@@ -62,8 +62,8 @@ parameters :
             
 
 description : |
-    <p>This App leverages <a href="https://snekmer.readthedocs.io/en/latest/">Snekmer</a> for its Apply function, a powerful tool designed to process sequences into kmers and predict protein sequence function. The Apply function utilizes pre-built kmer counts matrices from 1000 InterPro genomes for TIGRFams, Pfam, and PANTHER annotations.</p>
-    <p> The kmerized protein sequences are compared to each family in the prebuilt matrices using cosine similarity to find the most likely function. Cosine similarity is a similarity metric that vectorizes objects into N dimensions, where N is the number of kmers, and then measures the angle between the vectors. It is commonly used in text analysis.</p> 
+    <p>This App leverages <a href="https://snekmer.readthedocs.io/en/latest/">Snekmer</a> for its Apply function, a powerful tool designed to re-encode amino acid sequences, process them into kmers and predict protein sequence function. The Apply function utilizes pre-built kmer counts matrices from 1000 InterPro genomes for TIGRFams, Pfam, and PANTHER annotations.</p>
+    <p> The kmerized protein sequences are compared to each family in the prebuilt matrices using cosine similarity to find the most likely protein function. Cosine similarity is a similarity metric that vectorizes objects into N dimensions, where N is the number of kmers, and then measures the angle between the vectors. It is commonly used in text analysis.</p> 
     <p> The prebuilt kmer count matrices were created using Snekmer Learn, a feature not yet available to KBase.</p>
     <p><h4>Snekmer Apply Key Features:</h4></p>
     <ul>
