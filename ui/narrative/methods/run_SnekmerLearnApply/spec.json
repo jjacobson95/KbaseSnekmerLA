@@ -83,7 +83,31 @@
             "text_options": {
                 "valid_ws_types": ["KBaseGenomes.Genome"]
             }
-        }
+        },
+		{
+			"id": "output_object_genome",
+			"optional": true,
+			"advanced": false,
+			"allow_multiple": true,
+			"default_values": [ "" ],
+			"field_type": "text",
+			"text_options": {
+				"valid_ws_types": ["KBaseGenomes.Genome"],
+				"is_output_name": true
+			}
+		},
+		{
+			"id": "output_object_proteinseqset",
+			"optional": true,
+			"advanced": false,
+			"allow_multiple": true,
+			"default_values": [ "" ],
+			"field_type": "text",
+			"text_options": {
+				"valid_ws_types": ["KBaseSequences.ProteinSequenceSet"],
+				"is_output_name": true
+			}
+		}
     ],
     "behavior": {
         "service-mapping": {
@@ -111,7 +135,17 @@
                 },{
                     "input_parameter": "family",
                     "target_property": "family"
-                }    
+                },
+				{
+					"input_parameter": "output_object_genome",
+					"target_property": "output_object_genome"
+
+				},
+				{
+					"input_parameter": "output_object_proteinseqset",
+					"target_property": "output_object_proteinseqset"
+
+				}
                 ],
             "output_mapping": [
                 {

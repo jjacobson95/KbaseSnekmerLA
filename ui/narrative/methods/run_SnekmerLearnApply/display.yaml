@@ -1,12 +1,13 @@
 #
 # define display information
 #
-name: Snekmer Apply
+name: Annotate with Snekmer Apply
 tooltip: |
-    Performs the Snekmer Apply Function using TIGRFams,Pfam, or PANTHER annotations with a pre-built counts matrix from 1000 InterPro genomes.
+    Annotate Genome or Protein Sequence Set Object with Snekmer Apply.
+
 screenshots: []
 
-icon: null
+icon: snekmer-icon.png
 
 #
 # define a set of similar methods that might be useful to the user
@@ -21,31 +22,64 @@ suggestions:
         related:
             []
         next:
-            [annotate_contigset]
+            []
 
 #
 # Configure the display and description of parameters
 #
+
 parameters :
     input_type :
         ui-name : |
             Input Type
         short-hint : |
-            Select the type of input: either a Protein Sequence Set or a Genome.
+            Determine the type of input. This is either Protein Sequence Set or a Genome Object. The output 
     family:
         ui-name : |
             Annotation Family
         short-hint : |
-            Select the type of annotation family you wish to annotate the object with. Options are TIGRFams, Pfam, and PANTHER.
+            Specifies the family used to annotate sequences with. Options are TIGRFams, Pfam, and PANTHER.
     protein_input :
         ui-name : |
             ProteinSequenceSet Object
         short-hint : |
-            Each sequence within this file will be annotated using Snekmer Apply with specified annotations. 
+            The ProteinSequenceSet object to be updated with new annotations ontologies.
     genome_input :
         ui-name : |
             Genome Object
         short-hint : |
-            Each sequence within this file will be annotated using Snekmer Apply with specified annotations. 
+            The Genome object which to be updated with new annotations ontologies.
+    output_object_genome :
+        ui-name : |
+            Genome Object
+        short-hint : |
+            The Genome object with updated annotations ontologies.
+    output_object_proteinseqset :
+        ui-name : |
+            Protein Sequence Set Object
+        short-hint : |
+            The Protein Sequence Set object with updated annotations ontologies.
+            
+
 description : |
-    <p> v2 The user supplies files containing sequences in an appropriate format (e.g. ProteinSetObjects or GenomeObjects). Snekmer uses cosine distance to predict the annotation of each sequence from the pre-built kmer counts matrix. The output is a table for each file containing sequence annotation predictions with confidence levels.</p>
+    <p>This App leverages <a href="https://snekmer.readthedocs.io/en/latest/">Snekmer</a> for its Apply function, a powerful tool designed to process sequences into kmers and predict protein sequence function. The Apply function utilizes pre-built kmer counts matrices from 1000 InterPro genomes for TIGRFams, Pfam, and PANTHER annotations.</p>
+    <p> The kmerized protein sequences are compared to each family in the prebuilt matrices using cosine similarity to find the most likely function. Cosine similarity is a similarity metric that vectorizes objects into N dimensions, where N is the number of kmers, and then measures the angle between the vectors. It is commonly used in text analysis.</p> 
+    <p> The prebuilt kmer count matrices were created using Snekmer Learn, a feature not yet available to KBase.</p>
+    <p><h4>Snekmer Apply Key Features:</h4></p>
+    <ul>
+        <li><b>Rapid Annotation:</b> Using pre-built counts matrices mentioned above, Snekmer Apply utilizes cosine similarity to predict the annotation ontology.</li>
+        <li><b>Efficient Data Handling:</b> Optimized to manage and analyze Genome and ProteinSequenceSet Obects effectively.</li>
+        <li><b>Integration of Comprehensive Databases:</b> Incorporates annotations from TIGRFams, Pfam, and PANTHER, covering a wide range of genomic features.</li>
+        <li><b>Seamless Workflow Integration:</b> Designed to complement and integrate with other genomic analysis tools available in KBase, enhancing overall research capabilities.</li>
+        <li><b>Detailed Output:</b> While updating object ontologies, this tool also generates a secondary output with detailed results of prediction confidence.</li>
+    </ul>
+
+    <p> The output of Snekmer Apply is an updated object with new protein sequence / gene ontologies. The secondary output provides predictions and confidence levels which may be directly downloaded.</p>
+
+
+publications:
+    -
+        pmid: 36789294
+        display-text: |
+            Chang CH, Nelson WC, Jerger A, Wright AT, Egbert RG, McDermott JE. Snekmer: a scalable pipeline for protein sequence fingerprinting based on amino acid recoding. Bioinform Adv. 2023 Feb 2;3(1):vbad005. doi: 10.1093/bioadv/vbad005. PMID: 36789294; PMCID: PMC9913046.
+        link: https://pubmed.ncbi.nlm.nih.gov/36789294/
