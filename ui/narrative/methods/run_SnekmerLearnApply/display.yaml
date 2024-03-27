@@ -33,7 +33,7 @@ parameters :
         ui-name : |
             Input Type
         short-hint : |
-            Determine the type of input. This is either Protein Sequence Set or a Genome Object. The output 
+            Specifies the input type. Options are either a Protein Sequence Set or Genome Object.
     family:
         ui-name : |
             Annotation Family

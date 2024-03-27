@@ -135,17 +135,7 @@
                 },{
                     "input_parameter": "family",
                     "target_property": "family"
-                },
-				{
-					"input_parameter": "output_object_genome",
-					"target_property": "output_object_genome"
-
-				},
-				{
-					"input_parameter": "output_object_proteinseqset",
-					"target_property": "output_object_proteinseqset"
-
-				}
+                }
                 ],
             "output_mapping": [
                 {
