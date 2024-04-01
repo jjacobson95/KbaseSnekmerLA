@@ -1,10 +1,10 @@
 {
-    "ver": "0.0.1",
+    "ver": "1.0.0",
     "authors": [
         "jjacobson"
     ],
     "contact": "jeremy.jacobson@pnnl.gov",
-    "categories": ["active"],
+    "categories": ["annotation"],
     "widgets": {
         "input": null,
         "output": "no-display"
